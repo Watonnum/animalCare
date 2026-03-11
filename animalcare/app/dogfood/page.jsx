@@ -5,7 +5,7 @@ const page = () => {
   return (
     <div className="flex flex-col justify-center items-center mt-6 mx-[5%]">
       <Navbar />
-      <p className="my-96 text-3xl">Dog Food Page...</p>
+      <p className="my-96 text-3xl libre-baskerville">Dog Food Page...</p>
     </div>
   );
 };
