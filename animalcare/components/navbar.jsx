@@ -9,7 +9,7 @@ const MenuItem = ({ item }) => {
   const pathname = usePathname();
   return (
     <Link
-      className={`${isHover ? "text-black" : "text-[#EBEBEB]"} cursor-pointer transition-all ${pathname === item.path ? "text-black" : ""}`}
+      className={`${isHover ? "text-black scale-105" : "text-[#EBEBEB]"} cursor-pointer transition-all ${pathname === item.path ? "text-black" : ""}`}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
       href={item.path}
@@ -49,17 +49,19 @@ const Navbar = () => {
   ];
 
   return (
-    <div className="flex justify-between items-center gap-4 text-xl bg-[#F6F6F6] px-4 py-2 rounded-2xl w-full select-none">
+    <div className="flex justify-between items-center gap-4 text-xl bg-[#F6F6F6] px-4 py-2 rounded-2xl w-full select-none inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
       {/* Left component */}
-      <Link className="cursor-pointer" href="/">
+      <Link className="cursor-pointer text-2xl" href="/">
         WIPAWAN
       </Link>
+
       {/* middle component */}
-      <div className="flex justify-center items-center gap-12">
+      <div className="flex justify-center items-center gap-12 border-x-2 px-6">
         {menuNav.map((x) => (
           <MenuItem item={x} key={x.id} />
         ))}
       </div>
+
       {/* Right component */}
       <div className="flex justify-center items-center gap-4">
         <FaUserCircle className="text-4xl text-[#F7C52F]" />
