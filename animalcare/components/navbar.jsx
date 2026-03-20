@@ -9,7 +9,7 @@ const MenuItem = ({ item }) => {
   const pathname = usePathname();
   return (
     <Link
-      className={`${isHover ? "text-black scale-105" : "text-[#EBEBEB]"} cursor-pointer transition-all ${pathname === item.path ? "text-black" : ""}`}
+      className={`${isHover ? "text-amber-720 scale-105" : "text-[#EBEBEB]"} cursor-pointer transition-all ${pathname === item.path ? "text-amber-800 font-extrabold scale-105" : ""}`}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
       href={item.path}
@@ -24,34 +24,24 @@ const Navbar = () => {
     {
       id: 1,
       name: "Home",
-      path: "/",
+      path: "/" || "",
     },
     {
       id: 2,
-      name: "Dog",
-      path: "/dog",
+      name: "Service",
+      path: "/services",
     },
     {
       id: 3,
-      name: "Dog Food",
-      path: "/dogfood",
-    },
-    {
-      id: 4,
-      name: "About",
-      path: "/about",
-    },
-    {
-      id: 5,
-      name: "Contact",
-      path: "/contact",
+      name: "Shop",
+      path: "/shop",
     },
   ];
 
   return (
-    <div className="flex justify-between items-center gap-4 text-xl bg-[#F6F6F6] px-4 py-2 rounded-2xl w-full select-none inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+    <div className="flex justify-between items-center gap-4 bg-[#F6F6F6] px-4 py-2 rounded-2xl w-full select-none transition-opacity duration-300 font-extrabold text-xl text-[#945318]">
       {/* Left component */}
-      <Link className="cursor-pointer text-2xl" href="/">
+      <Link className="cursor-pointer text-3xl" href="/">
         WIPAWAN
       </Link>
 
@@ -64,8 +54,8 @@ const Navbar = () => {
 
       {/* Right component */}
       <div className="flex justify-center items-center gap-4">
-        <FaUserCircle className="text-4xl text-[#F7C52F]" />
-        <div className="px-8 py-2 border rounded-xl hover:cursor-pointer hover:scale-103 delay-50 transition-all">
+        <FaUserCircle className="text-4xl text-[#904E0D] border-[#945318]" />
+        <div className="px-8 py-2 border rounded-xl hover:cursor-pointer hover:scale-103 delay-50 transition-all text-white bg-[#945318] border-[#945318]">
           Sign In
         </div>
       </div>
