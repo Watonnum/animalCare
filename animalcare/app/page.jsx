@@ -1,6 +1,7 @@
 import Landing from "@/components/landing";
 import Navbar from "@/components/navbar";
 import ShowcardOffer from "@/components/showcardOffer";
+import WhyUs from "@/components/whyUs";
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
       <Navbar />
       <Landing />
       <ShowcardOffer />
+      <WhyUs />
     </div>
   );
 }

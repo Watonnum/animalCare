@@ -22,7 +22,7 @@ const Card = ({ card }) => {
       <img
         src={`/${card.bgImg}`}
         width={300}
-        alt={card.type}
+        // alt={card.type}
         className={`absolute -z-10 ${card.bgSetting}`}
       />
     </div>
