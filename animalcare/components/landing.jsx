@@ -19,7 +19,7 @@ const Landing = () => {
         </div>
         {/* shop btn */}
         <div className="flex justify-center items-center gap-4">
-          <button className="p-4 text-xl border border-[#904E0D] rounded-2xl hover:scale-105 cursor-pointer transition-all delay-75 bg-[#904E0D]">
+          <button className="p-4 text-xl text-white border border-[#904E0D] rounded-2xl hover:scale-105 cursor-pointer transition-all delay-75 bg-[#904E0D]">
             {`Shop now >`}
           </button>
           <button className="p-4 text-xl border rounded-2xl hover:scale-105 cursor-pointer transition-all delay-75">

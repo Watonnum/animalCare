@@ -9,12 +9,16 @@ const MenuItem = ({ item }) => {
   const pathname = usePathname();
   return (
     <Link
-      className={`${isHover ? "text-amber-720 scale-105" : "text-[#EBEBEB]"} cursor-pointer transition-all ${pathname === item.path ? "text-amber-800 font-extrabold scale-105" : ""}`}
+      className={`${pathname === item.path ? "text-amber-800 scale-105" : "text-gray-300"} cursor-pointer transition-all`}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
       href={item.path}
     >
-      {item.name}
+      <p
+        className={`${isHover ? "text-amber-800 font-extrabold scale-120 transition-all duration-500" : ""}`}
+      >
+        {item.name}
+      </p>
     </Link>
   );
 };
@@ -55,9 +59,9 @@ const Navbar = () => {
       {/* Right component */}
       <div className="flex justify-center items-center gap-4">
         <FaUserCircle className="text-4xl text-[#904E0D] border-[#945318]" />
-        <div className="px-8 py-2 border rounded-xl hover:cursor-pointer hover:scale-103 delay-50 transition-all text-white bg-[#945318] border-[#945318]">
+        <button className="px-8 py-2 border rounded-xl hover:cursor-pointer hover:scale-103 delay-50 transition-all text-white bg-[#945318] border-[#945318]">
           Sign In
-        </div>
+        </button>
       </div>
     </div>
   );
