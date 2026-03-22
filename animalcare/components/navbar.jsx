@@ -3,6 +3,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
+import { useSession, signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const MenuItem = ({ item }) => {
   const [isHover, setIsHover] = useState(false);
@@ -24,6 +26,8 @@ const MenuItem = ({ item }) => {
 };
 
 const Navbar = () => {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const menuNav = [
     {
       id: 1,
@@ -58,10 +62,41 @@ const Navbar = () => {
 
       {/* Right component */}
       <div className="flex justify-center items-center gap-4">
-        <FaUserCircle className="text-4xl text-[#904E0D] border-[#945318]" />
-        <button className="px-8 py-2 border rounded-xl hover:cursor-pointer hover:scale-103 delay-50 transition-all text-white bg-[#945318] border-[#945318]">
-          Sign In
-        </button>
+        {status === "loading" && (
+          // แสดง Placeholder ขณะกำลังโหลดข้อมูล session
+          <div className="animate-pulse bg-gray-300 rounded-full h-9 w-9"></div>
+        )}
+
+        {status === "unauthenticated" && (
+          // กรณีที่ยังไม่ได้ล็อคอิน
+          <>
+            <FaUserCircle className="text-4xl text-[#904E0D]" />
+            <button
+              onClick={() => {
+                // signIn()
+                router.push("/login");
+              }}
+              className="px-8 py-2 border rounded-xl hover:cursor-pointer hover:scale-105 delay-50 transition-all text-white bg-[#945318] border-[#945318]"
+            >
+              Sign In
+            </button>
+          </>
+        )}
+
+        {status === "authenticated" && (
+          // กรณีที่ล็อคอินแล้ว
+          <>
+            <span className="text-lg font-semibold text-amber-900">
+              Hi, {session.user?.name}
+            </span>
+            <button
+              onClick={() => signOut({ callbackUrl: "/" })} // 4. กดแล้ว Logout
+              className="px-6 py-2 border rounded-xl hover:cursor-pointer hover:scale-105 delay-50 transition-all text-[#945318] bg-transparent border-[#945318]"
+            >
+              Sign Out
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
