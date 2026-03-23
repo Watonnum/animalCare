@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import dogKidImage from "../public/dogKid.jpg";
 
 const Landing = () => {
   return (
@@ -30,11 +31,12 @@ const Landing = () => {
       {/* Picture */}
       <div className="flex justify-center items-center w-full">
         <Image
-          src="/dogKid.jpg"
+          src={dogKidImage}
           alt="dogKid"
           className="rounded-4xl scale-70"
           width={700}
           height={800}
+          // placeholder="blur"
         />
       </div>
     </div>

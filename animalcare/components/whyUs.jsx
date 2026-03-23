@@ -1,5 +1,9 @@
 import Image from "next/image";
 import React from "react";
+import playground2Image from "@/public/playground2.jpg";
+import playgroundImage from "@/public/playground.jpg";
+import workerImage from "@/public/worker.jpg";
+import puppy_hangUp from "@/public/puppy_hangUp.jpg";
 
 const WhyUs = () => {
   return (
@@ -9,14 +13,14 @@ const WhyUs = () => {
         {/* Pic 1st col */}
         <div className="w-1/2 flex flex-col gap-4 justify-center items-end pr-2">
           <Image
-            src="/worker.jpg"
+            src={workerImage}
             alt=""
             width={300}
             height={500}
             className="rounded-2xl"
           />
           <Image
-            src="/puppy_hangUp.jpg"
+            src={puppy_hangUp}
             alt=""
             width={300}
             height={200}
@@ -28,14 +32,14 @@ const WhyUs = () => {
         <div className="w-1/2 flex flex-col gap-4 justify-center items-start pl-2">
           <div className=" w-[300] h-[100] rounded-2xl"></div>
           <Image
-            src="/playground2.jpg"
+            src={playground2Image}
             alt=""
             width={300}
             height={300}
             className="rounded-2xl"
           />
           <Image
-            src="/playground.jpg"
+            src={playgroundImage}
             alt=""
             width={300}
             height={500}
