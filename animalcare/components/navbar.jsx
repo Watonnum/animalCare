@@ -17,7 +17,7 @@ const MenuItem = ({ item }) => {
       href={item.path}
     >
       <p
-        className={`${isHover ? "text-amber-800 font-extrabold scale-120 transition-all duration-500" : ""}`}
+        className={`${isHover ? "text-amber-800 font-bold scale-120 transition-all duration-500" : ""}`}
       >
         {item.name}
       </p>
@@ -49,8 +49,8 @@ const Navbar = () => {
   return (
     <div className="flex justify-between items-center gap-4 bg-[#F6F6F6] px-4 py-2 rounded-2xl w-full select-none transition-opacity duration-300 font-extrabold text-xl text-[#945318]">
       {/* Left component */}
-      <Link className="cursor-pointer text-3xl" href="/">
-        WIPAWAN
+      <Link className="lobster-regular cursor-pointer text-5xl" href="/">
+        Wipawan
       </Link>
 
       {/* middle component */}

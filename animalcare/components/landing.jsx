@@ -1,6 +1,9 @@
 import Image from "next/image";
 import React from "react";
 import dogKidImage from "../public/dogKid.jpg";
+import user_fake1 from "../public/user_fake1.jpg";
+import user_fake2 from "../public/user_fake2.jpg";
+import { FaStar } from "react-icons/fa";
 
 const Landing = () => {
   return (
@@ -23,21 +26,45 @@ const Landing = () => {
           <button className="p-4 text-xl text-white border border-[#904E0D] rounded-2xl hover:scale-105 cursor-pointer transition-all delay-75 bg-[#904E0D]">
             {`Shop now >`}
           </button>
-          <button className="p-4 text-xl border rounded-2xl hover:scale-105 cursor-pointer transition-all delay-75">
+          <button className="p-4 text-xl border rounded-2xl hover:scale-105 cursor-pointer transition-all delay-75 bg-[#78C6FD] border-[#78C6FD]">
             Explore Pets
           </button>
         </div>
       </div>
       {/* Picture */}
-      <div className="flex justify-center items-center w-full">
+      <div className="flex justify-center items-center w-full relative">
         <Image
           src={dogKidImage}
           alt="dogKid"
           className="rounded-4xl scale-70"
-          width={700}
-          height={800}
+          width={800}
+          height={900}
           // placeholder="blur"
         />
+        <div className="w-3/6 bottom-40 mx-6 z-10 absolute h-20 border bg-white blur-xs rounded-3xl opacity-85"></div>
+        <Image
+          src={user_fake1}
+          alt="user_fake1.jpg"
+          className="rounded-4xl z-10 absolute bottom-45 left-60"
+          width={48}
+          height={48}
+        />
+        <Image
+          src={user_fake2}
+          alt="user_fake1.jpg"
+          className="rounded-4xl z-10 absolute bottom-43 left-67"
+          width={48}
+          height={48}
+        />
+        <div className="flex flex-col absolute bottom-45 z-10 left-85">
+          <p className="font-extralight text-lg">Loved by 2000+ Pets</p>
+          <div className="flex justify-start items-center gap-2 text-amber-600">
+            <FaStar />
+            <FaStar />
+            <FaStar />
+            <FaStar />
+          </div>
+        </div>
       </div>
     </div>
   );
