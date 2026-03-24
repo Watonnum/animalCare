@@ -70,7 +70,7 @@ const Navbar = () => {
         {status === "unauthenticated" && (
           // กรณีที่ยังไม่ได้ล็อคอิน
           <>
-            <FaUserCircle className="text-4xl text-[#904E0D]" />
+            {/* <FaUserCircle className="text-4xl text-[#904E0D]" /> */}
             <button
               onClick={() => {
                 // signIn()
@@ -78,7 +78,7 @@ const Navbar = () => {
               }}
               className="px-8 py-2 border rounded-xl hover:cursor-pointer hover:scale-105 delay-50 transition-all text-white bg-[#945318] border-[#945318]"
             >
-              Sign In
+              Book now
             </button>
           </>
         )}

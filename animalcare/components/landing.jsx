@@ -41,24 +41,25 @@ const Landing = () => {
           height={900}
           // placeholder="blur"
         />
-        <div className="w-3/6 bottom-40 mx-6 z-10 absolute h-20 border bg-white blur-xs rounded-3xl opacity-85"></div>
+        <div className="w-3/6 bottom-40 mx-6 z-10 absolute h-20 border bg-[#EDEAE0] blur-xs rounded-3xl opacity-85"></div>
         <Image
           src={user_fake1}
           alt="user_fake1.jpg"
-          className="rounded-4xl z-10 absolute bottom-45 left-60"
+          className="rounded-4xl z-10 absolute bottom-45 left-60 border border-white p-1 bg-white"
           width={48}
           height={48}
         />
         <Image
           src={user_fake2}
           alt="user_fake1.jpg"
-          className="rounded-4xl z-10 absolute bottom-43 left-67"
+          className="rounded-4xl z-10 absolute bottom-43 left-67 border border-white p-1 bg-white"
           width={48}
           height={48}
         />
         <div className="flex flex-col absolute bottom-45 z-10 left-85">
           <p className="font-extralight text-lg">Loved by 2000+ Pets</p>
           <div className="flex justify-start items-center gap-2 text-amber-600">
+            <FaStar />
             <FaStar />
             <FaStar />
             <FaStar />
