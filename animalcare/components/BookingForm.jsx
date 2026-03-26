@@ -28,16 +28,30 @@ const BookingForm = () => {
 
   const isSameDay = checkIn === checkOut;
 
-  useEffect(() => {
-    // If not same day, Morning and Afternoon are not allowed -> force Full Day
+  // Handlers for date changes
+  const handleCheckInChange = (e) => {
+    const newCheckIn = e.target.value;
+    setCheckIn(newCheckIn);
     if (
-      !isSameDay &&
+      newCheckIn !== checkOut &&
       (specialService === "morningService" ||
         specialService === "afternoonService")
     ) {
       setSpecialService("fullDayService");
     }
-  }, [isSameDay, specialService]);
+  };
+
+  const handleCheckOutChange = (e) => {
+    const newCheckOut = e.target.value;
+    setCheckOut(newCheckOut);
+    if (
+      checkIn !== newCheckOut &&
+      (specialService === "morningService" ||
+        specialService === "afternoonService")
+    ) {
+      setSpecialService("fullDayService");
+    }
+  };
 
   // --- Derived State Calculations ---
   // 1. Calculate days
@@ -164,7 +178,7 @@ const BookingForm = () => {
                   type="date"
                   min={today}
                   value={checkIn}
-                  onChange={(e) => setCheckIn(e.target.value)}
+                  onChange={handleCheckInChange}
                   className="w-full bg-[#EAE5DA] px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#75390E]/50 text-stone-700"
                 />
               </div>
@@ -178,7 +192,7 @@ const BookingForm = () => {
                   type="date"
                   min={checkIn || today}
                   value={checkOut}
-                  onChange={(e) => setCheckOut(e.target.value)}
+                  onChange={handleCheckOutChange}
                   className="w-full bg-[#EAE5DA] px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#75390E]/50 text-stone-700"
                 />
               </div>
