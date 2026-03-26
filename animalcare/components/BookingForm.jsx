@@ -5,49 +5,64 @@ import React, { useState, useEffect } from "react";
 const prices = {
   small: 40,
   large: 60,
-  healthCheck: 45,
-  grooming: 60,
-  gourmetMealPerDay: 15,
+  morningService: 25,
+  afternoonService: 25,
+  fullDayService: 50,
 };
 
 const BookingForm = () => {
+  // Get today's date formatted as YYYY-MM-DD
+  const today = new Date().toLocaleDateString("en-CA"); // 'en-CA' outputs YYYY-MM-DD consistently
+
   // State for form fields
   const [petSize, setPetSize] = useState("small");
-  const [checkIn, setCheckIn] = useState("2024-05-20");
-  const [checkOut, setCheckOut] = useState("2024-05-25");
+  const [checkIn, setCheckIn] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+  const [checkOut, setCheckOut] = useState(
+    new Date().toISOString().split("T")[0],
+  );
 
-  // State for add-on services
-  const [addons, setAddons] = useState({
-    healthCheck: true,
-    grooming: false,
-    gourmetMeal: false,
-  });
+  // State for add-on services (mutually exclusive)
+  const [specialService, setSpecialService] = useState("fullDayService");
+
+  const isSameDay = checkIn === checkOut;
+
+  useEffect(() => {
+    // If not same day, Morning and Afternoon are not allowed -> force Full Day
+    if (
+      !isSameDay &&
+      (specialService === "morningService" ||
+        specialService === "afternoonService")
+    ) {
+      setSpecialService("fullDayService");
+    }
+  }, [isSameDay, specialService]);
 
   // --- Derived State Calculations ---
-  // 1. Calculate nights
+  // 1. Calculate days
   const start = new Date(checkIn);
   const end = new Date(checkOut);
   let nights = 0;
 
-  if (start && end && end.getTime() > start.getTime()) {
+  if (start && end && end.getTime() >= start.getTime()) {
     const diffTime = Math.abs(end.getTime() - start.getTime());
     nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   }
 
+  // Treat 0 nights (same day) as 1 service day
+  const serviceDays = nights === 0 ? 1 : nights;
+
   // 2. Calculate Subtotal
-  let subtotal = nights * prices[petSize];
-  if (addons.healthCheck) subtotal += prices.healthCheck;
-  if (addons.grooming) subtotal += prices.grooming;
-  if (addons.gourmetMeal) subtotal += prices.gourmetMealPerDay * nights;
+  let subtotal = serviceDays * prices[petSize];
+  if (specialService) {
+    subtotal += prices[specialService] * serviceDays;
+  }
 
   const tax = subtotal * 0.08;
 
   // 4. Calculate Total
   const total = subtotal + tax;
-
-  const toggleAddon = (addonKey) => {
-    setAddons((prev) => ({ ...prev, [addonKey]: !prev[addonKey] }));
-  };
 
   // Mock Submit Function - Replace with actual API Call
   const handleCompleteBooking = async () => {
@@ -55,8 +70,8 @@ const BookingForm = () => {
       petSize,
       checkIn,
       checkOut,
-      addons,
-      nights,
+      specialService,
+      serviceDays,
       pricing: {
         subtotal,
         tax,
@@ -147,6 +162,7 @@ const BookingForm = () => {
               <div className="relative">
                 <input
                   type="date"
+                  min={today}
                   value={checkIn}
                   onChange={(e) => setCheckIn(e.target.value)}
                   className="w-full bg-[#EAE5DA] px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#75390E]/50 text-stone-700"
@@ -160,6 +176,7 @@ const BookingForm = () => {
               <div className="relative">
                 <input
                   type="date"
+                  min={checkIn || today}
                   value={checkOut}
                   onChange={(e) => setCheckOut(e.target.value)}
                   className="w-full bg-[#EAE5DA] px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#75390E]/50 text-stone-700"
@@ -175,34 +192,35 @@ const BookingForm = () => {
             <span className="text-xl">🏥</span> Specialized Care
           </h3>
           <div className="flex flex-col gap-3">
-            {/* Health Check */}
+            {/* Morning Service */}
             <div
-              onClick={() => toggleAddon("healthCheck")}
-              className={`flex items-center justify-between p-4 bg-white rounded-2xl cursor-pointer border-2 transition-all 
-                ${addons.healthCheck ? "border-[#75390E]/20" : "border-transparent"}`}
+              onClick={() => {
+                if (isSameDay) setSpecialService("morningService");
+              }}
+              className={`flex items-center justify-between p-4 bg-white rounded-2xl border-2 transition-all 
+                ${specialService === "morningService" ? "border-[#75390E]/20" : "border-transparent"}
+                ${!isSameDay ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
             >
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-[#FCEBE7] text-[#E0866A] flex items-center justify-center">
-                  <span className="text-xl">🩺</span>
+                  <span className="text-xl">🌅</span>
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm">
-                    Comprehensive Health Check
-                  </h4>
+                  <h4 className="font-bold text-sm">Morning Care (3 Hrs)</h4>
                   <p className="text-xs text-stone-500">
-                    Full vitals and wellness assessment
+                    Available between 9:00 AM - 12:00 PM
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
                 <span className="font-bold text-sm">
-                  ${prices.healthCheck.toFixed(2)}
+                  ${prices.morningService.toFixed(2)}
                 </span>
                 <div
                   className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors
-                  ${addons.healthCheck ? "bg-[#9A561D] border-[#9A561D]" : "border-stone-300"}`}
+                  ${specialService === "morningService" ? "bg-[#9A561D] border-[#9A561D]" : "border-stone-300"}`}
                 >
-                  {addons.healthCheck && (
+                  {specialService === "morningService" && (
                     <svg
                       className="w-3 h-3 text-white"
                       fill="none"
@@ -221,32 +239,35 @@ const BookingForm = () => {
               </div>
             </div>
 
-            {/* Grooming */}
+            {/* Afternoon Service */}
             <div
-              onClick={() => toggleAddon("grooming")}
-              className={`flex items-center justify-between p-4 bg-white rounded-2xl cursor-pointer border-2 transition-all 
-                ${addons.grooming ? "border-[#75390E]/20" : "border-transparent"}`}
+              onClick={() => {
+                if (isSameDay) setSpecialService("afternoonService");
+              }}
+              className={`flex items-center justify-between p-4 bg-white rounded-2xl border-2 transition-all 
+                ${specialService === "afternoonService" ? "border-[#75390E]/20" : "border-transparent"}
+                ${!isSameDay ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
             >
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-[#E5FAFD] text-[#54A1C8] flex items-center justify-center">
-                  <span className="text-xl">✂️</span>
+                  <span className="text-xl">🌤️</span>
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm">Full Grooming Session</h4>
+                  <h4 className="font-bold text-sm">Afternoon Care (3 Hrs)</h4>
                   <p className="text-xs text-stone-500">
-                    Wash, cut, and nail trimming
+                    Available between 1:00 PM - 4:00 PM
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
                 <span className="font-bold text-sm">
-                  ${prices.grooming.toFixed(2)}
+                  ${prices.afternoonService.toFixed(2)}
                 </span>
                 <div
                   className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors
-                  ${addons.grooming ? "bg-[#9A561D] border-[#9A561D]" : "border-stone-300"}`}
+                  ${specialService === "afternoonService" ? "bg-[#9A561D] border-[#9A561D]" : "border-stone-300"}`}
                 >
-                  {addons.grooming && (
+                  {specialService === "afternoonService" && (
                     <svg
                       className="w-3 h-3 text-white"
                       fill="none"
@@ -265,32 +286,32 @@ const BookingForm = () => {
               </div>
             </div>
 
-            {/* Gourmet Meal */}
+            {/* Full Day Service */}
             <div
-              onClick={() => toggleAddon("gourmetMeal")}
+              onClick={() => setSpecialService("fullDayService")}
               className={`flex items-center justify-between p-4 bg-white rounded-2xl cursor-pointer border-2 transition-all 
-                ${addons.gourmetMeal ? "border-[#75390E]/20" : "border-transparent"}`}
+                ${specialService === "fullDayService" ? "border-[#75390E]/20" : "border-transparent"}`}
             >
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-[#FFF3E0] text-[#DCA259] flex items-center justify-center">
-                  <span className="text-xl">🍴</span>
+                  <span className="text-xl">☀️</span>
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm">Gourmet Meal Plan</h4>
+                  <h4 className="font-bold text-sm">Full Day Care (24 Hrs)</h4>
                   <p className="text-xs text-stone-500">
-                    Organic, chef-prepared pet meals
+                    24-hour full day care service
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
                 <span className="font-bold text-sm">
-                  ${prices.gourmetMealPerDay.toFixed(2)}/day
+                  ${prices.fullDayService.toFixed(2)}
                 </span>
                 <div
                   className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors
-                  ${addons.gourmetMeal ? "bg-[#9A561D] border-[#9A561D]" : "border-stone-300"}`}
+                  ${specialService === "fullDayService" ? "bg-[#9A561D] border-[#9A561D]" : "border-stone-300"}`}
                 >
-                  {addons.gourmetMeal && (
+                  {specialService === "fullDayService" && (
                     <svg
                       className="w-3 h-3 text-white"
                       fill="none"
@@ -313,8 +334,8 @@ const BookingForm = () => {
       </div>
 
       {/* Right Column: Summary */}
-      <div className="w-full lg:w-[400px] flex flex-col gap-6">
-        <div className="bg-[#EBE2D3] rounded-[2rem] p-8 flex flex-col">
+      <div className="w-full lg:w-100 flex flex-col gap-6">
+        <div className="bg-[#EBE2D3] rounded-4xl p-8 flex flex-col">
           <h2 className="text-2xl font-bold mb-8">Booking Summary</h2>
 
           <div className="flex flex-col gap-6 mb-8 border-b border-[#D6CBB9] pb-8">
@@ -324,48 +345,33 @@ const BookingForm = () => {
                   Premium Suite ({petSize === "small" ? "Small" : "Large"})
                 </h4>
                 <p className="text-xs text-stone-500">
-                  {nights} Nights • ${prices[petSize]}/night
+                  {serviceDays} {serviceDays === 1 ? "Day" : "Days"} • $
+                  {prices[petSize]}/day
                 </p>
               </div>
               <span className="font-bold text-sm">
-                ${(nights * prices[petSize]).toFixed(2)}
+                ${(serviceDays * prices[petSize]).toFixed(2)}
               </span>
             </div>
 
-            {addons.healthCheck && (
+            {specialService && (
               <div className="flex justify-between items-start">
                 <div>
-                  <h4 className="font-bold text-sm">Health Check</h4>
-                  <p className="text-xs text-stone-500">One-time service</p>
-                </div>
-                <span className="font-bold text-sm">
-                  ${prices.healthCheck.toFixed(2)}
-                </span>
-              </div>
-            )}
-
-            {addons.grooming && (
-              <div className="flex justify-between items-start">
-                <div>
-                  <h4 className="font-bold text-sm">Full Grooming</h4>
-                  <p className="text-xs text-stone-500">One-time service</p>
-                </div>
-                <span className="font-bold text-sm">
-                  ${prices.grooming.toFixed(2)}
-                </span>
-              </div>
-            )}
-
-            {addons.gourmetMeal && (
-              <div className="flex justify-between items-start">
-                <div>
-                  <h4 className="font-bold text-sm">Gourmet Meal Plan</h4>
+                  <h4 className="font-bold text-sm">
+                    {specialService === "morningService" &&
+                      "Morning Care (3 Hrs)"}
+                    {specialService === "afternoonService" &&
+                      "Afternoon Care (3 Hrs)"}
+                    {specialService === "fullDayService" &&
+                      "Full Day Care (24 Hrs)"}
+                  </h4>
                   <p className="text-xs text-stone-500">
-                    {nights} Days • ${prices.gourmetMealPerDay}/day
+                    {serviceDays} {serviceDays === 1 ? "Day" : "Days"} • $
+                    {prices[specialService]}/day
                   </p>
                 </div>
                 <span className="font-bold text-sm">
-                  ${(prices.gourmetMealPerDay * nights).toFixed(2)}
+                  ${(prices[specialService] * serviceDays).toFixed(2)}
                 </span>
               </div>
             )}
@@ -393,7 +399,9 @@ const BookingForm = () => {
 
           <button
             onClick={handleCompleteBooking}
-            disabled={nights <= 0}
+            disabled={
+              serviceDays <= 0 || !start || end.getTime() < start.getTime()
+            }
             className="w-full py-4 bg-[#8C4A0F] text-white rounded-2xl font-bold text-lg hover:bg-[#723C0C] transition-colors flex items-center justify-center gap-2 shadow-md disabled:bg-stone-400 disabled:cursor-not-allowed"
           >
             Complete Booking

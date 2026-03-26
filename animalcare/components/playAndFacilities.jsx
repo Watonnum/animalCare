@@ -51,13 +51,13 @@ const PlayAndFacilities = () => {
 
             {/* Stats Pills */}
             <div className="flex flex-wrap gap-4 pt-4">
-              <div className="bg-[#F5F4F0] px-6 py-4 rounded-3xl min-w-[200px]">
+              <div className="bg-[#F5F4F0] px-6 py-4 rounded-3xl min-w-50">
                 <p className="text-2xl font-bold text-[#A66E38]">12k+</p>
                 <p className="text-[10px] font-extrabold tracking-widest mt-1">
                   SQ FT OUTDOOR SPACE
                 </p>
               </div>
-              <div className="bg-[#F5F4F0] px-6 py-4 rounded-3xl min-w-[200px]">
+              <div className="bg-[#F5F4F0] px-6 py-4 rounded-3xl min-w-50">
                 <p className="text-2xl font-bold text-[#A66E38]">Cooling</p>
                 <p className="text-[10px] font-extrabold tracking-widest mt-1">
                   INDOOR PLAY AREAS
@@ -67,7 +67,7 @@ const PlayAndFacilities = () => {
           </div>
 
           {/* Top Right Image */}
-          <div className="w-full md:w-[280px] h-[180px] bg-black/10 rounded-4xl overflow-hidden relative shrink-0">
+          <div className="w-full md:w-70 h-45 bg-black/10 rounded-4xl overflow-hidden relative shrink-0">
             <Image
               src={bedRoom}
               alt="Dog Bed Room"
@@ -81,7 +81,7 @@ const PlayAndFacilities = () => {
         </div>
 
         {/* Bottom Right Image */}
-        <div className="w-full md:w-[320px] h-[200px] bg-black/10 rounded-4xl overflow-hidden relative self-end mt-8">
+        <div className="w-full md:w-[320px] h-50 bg-black/10 rounded-4xl overflow-hidden relative self-end mt-8">
           <Image
             src={dogPark}
             alt="Dog Water Park"
