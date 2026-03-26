@@ -1,8 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
-import { FaUserCircle } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -28,6 +27,7 @@ const MenuItem = ({ item }) => {
 const Navbar = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const pathname = usePathname(); // ดึง path ปัจจุบัน
   const menuNav = [
     {
       id: 1,
@@ -45,6 +45,10 @@ const Navbar = () => {
       path: "/shop",
     },
   ];
+
+  useEffect(() => {
+    console.log("Session auth: ", session, "Status auth: ", status);
+  }, [session, status]);
 
   return (
     <div className="flex justify-between items-center gap-4 bg-[#F6F6F6] px-4 py-2 rounded-2xl w-full select-none transition-opacity duration-300 font-extrabold text-xl text-[#945318]">
@@ -73,8 +77,8 @@ const Navbar = () => {
             {/* <FaUserCircle className="text-4xl text-[#904E0D]" /> */}
             <button
               onClick={() => {
-                // signIn()
-                router.push("/login");
+                // ส่ง callbackUrl เป็นพารามิเตอร์ไปหน้า login
+                router.push(`/login?callbackUrl=${pathname}`);
               }}
               className="px-8 py-2 border rounded-xl hover:cursor-pointer hover:scale-105 delay-50 transition-all text-white bg-[#945318] border-[#945318]"
             >

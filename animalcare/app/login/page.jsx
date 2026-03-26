@@ -1,14 +1,18 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useState, Suspense } from "react";
 
-const Page = () => {
+const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // ดึงค่า callbackUrl ออกมาจาก query ถ้าไม่มีให้ใช้ "/" เป็นค่าเริ่มต้น
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,12 +29,12 @@ const Page = () => {
         setError("Invalid email or password. Please try again.");
         console.error("Sign-in error:", result.error);
       } else if (result.ok) {
-        // ถ้าล็อคอินสำเร็จ, redirect ไปหน้าแรก
-        router.push("/");
+        // ถ้าล็อคอินสำเร็จ, redirect กลับหน้าเดิมตาม callbackUrl
+        router.push(callbackUrl);
         router.refresh(); // Refresh เพื่อให้ server session update
       }
     } catch (e) {
-      console.error("Caught an exception: ", err);
+      console.error("Caught an exception: ", e);
       setError("An unexpected error occurred. Please try again later.");
     }
   };
@@ -100,6 +104,21 @@ const Page = () => {
         </p>
       </form>
     </div>
+  );
+};
+
+// ใช้ Suspense ครอบ Client Component ที่มีการเรียกใช้ useSearchParams เพื่อไม่ให้เกิดปัญหากับ SSR ตอน Build ของ Next.js
+const Page = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          Loading...
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 };
 

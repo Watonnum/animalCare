@@ -4,7 +4,7 @@ import bg_theHealthyCare from "@/public/bg_theHealthyCare.jpg";
 const TheHealthyCare = () => {
   return (
     <div
-      className="w-full flex flex-col p-20 bg-cover bg-center text-white mt-6"
+      className="w-full flex flex-col p-20 bg-cover bg-center text-white"
       style={{
         backgroundImage: `linear-gradient(rgba(100, 50, 20, 0.7), rgba(100, 50, 20, 0.7)), url(${bg_theHealthyCare.src})`,
       }}

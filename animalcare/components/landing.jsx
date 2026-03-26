@@ -4,6 +4,7 @@ import dogKidImage from "../public/dogKid.jpg";
 import user_fake1 from "../public/user_fake1.jpg";
 import user_fake2 from "../public/user_fake2.jpg";
 import { FaStar } from "react-icons/fa";
+import Link from "next/link";
 
 const Landing = () => {
   return (
@@ -22,13 +23,13 @@ const Landing = () => {
           sprawling suites to boutique grooming, we treat your pet like family.
         </div>
         {/* shop btn */}
-        <div className="flex justify-center items-center gap-4">
-          <button className="p-4 text-xl text-white border border-[#904E0D] rounded-2xl hover:scale-105 cursor-pointer transition-all delay-75 bg-[#904E0D]">
-            {`Shop now >`}
-          </button>
-          <button className="p-4 text-xl border rounded-2xl hover:scale-105 cursor-pointer transition-all delay-75 bg-[#78C6FD] border-[#78C6FD]">
-            Explore Pets
-          </button>
+        <div className="flex justify-center items-center gap-4 font-bold">
+          <Link
+            className="py-4 px-10 text-xl text-white border border-[#904E0D] rounded-2xl hover:scale-105 cursor-pointer transition-all delay-75 bg-[#904E0D]"
+            href="/services"
+          >
+            {`Our services`}
+          </Link>
         </div>
       </div>
       {/* Picture */}
