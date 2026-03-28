@@ -8,17 +8,17 @@ import Link from "next/link";
 
 const Landing = () => {
   return (
-    <div className="grid grid-cols-2 justify-center items-center w-full select-none">
-      <div className="w-full flex flex-col justify-center items-start gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 justify-center items-center w-full select-none gap-12 lg:gap-0 mt-8 lg:mt-0">
+      <div className="w-full flex flex-col justify-center items-center lg:items-start gap-8 text-center lg:text-left">
         {/* welcome */}
-        <div className="text-8xl libre-baskerville">
+        <div className="text-5xl md:text-6xl lg:text-8xl libre-baskerville">
           <p>
             Luxury <span className="text-amber-800">Rest</span> for
           </p>
           <p>Your Best Friend</p>
         </div>
         {/* detail */}
-        <div className="text-gray-400">
+        <div className="text-gray-400 px-4 lg:px-0">
           Premium boarding and holistic care tailored for every breed. From
           sprawling suites to boutique grooming, we treat your pet like family.
         </div>
@@ -42,29 +42,34 @@ const Landing = () => {
           height={900}
           // placeholder="blur"
         />
-        <div className="w-3/6 bottom-40 mx-6 z-10 absolute h-20 border bg-[#EDEAE0] blur-xs rounded-3xl opacity-85"></div>
-        <Image
-          src={user_fake1}
-          alt="user_fake1.jpg"
-          className="rounded-4xl z-10 absolute bottom-45 left-60 border border-white p-1 bg-white"
-          width={48}
-          height={48}
-        />
-        <Image
-          src={user_fake2}
-          alt="user_fake1.jpg"
-          className="rounded-4xl z-10 absolute bottom-43 left-67 border border-white p-1 bg-white"
-          width={48}
-          height={48}
-        />
-        <div className="flex flex-col absolute bottom-45 z-10 left-85">
-          <p className="font-extralight text-lg">Loved by 2000+ Pets</p>
-          <div className="flex justify-start items-center gap-2 text-amber-600">
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
+        <div className="absolute bottom-12 md:bottom-20 left-1/2 -translate-x-1/2 z-10 flex items-center gap-4 bg-white/70 backdrop-blur-md border border-white/50 shadow-xl rounded-full px-6 py-3 min-w-max">
+          <div className="flex -space-x-3">
+            <Image
+              src={user_fake1}
+              alt="user1"
+              className="rounded-full border-2 border-white object-cover w-12 h-12"
+              width={48}
+              height={48}
+            />
+            <Image
+              src={user_fake2}
+              alt="user2"
+              className="rounded-full border-2 border-white object-cover w-12 h-12"
+              width={48}
+              height={48}
+            />
+          </div>
+          <div className="flex flex-col">
+            <p className="font-semibold text-gray-800 text-sm md:text-base whitespace-nowrap">
+              Loved by 2000+ Pets
+            </p>
+            <div className="flex justify-start items-center gap-1 text-amber-500 text-sm">
+              <FaStar />
+              <FaStar />
+              <FaStar />
+              <FaStar />
+              <FaStar />
+            </div>
           </div>
         </div>
       </div>

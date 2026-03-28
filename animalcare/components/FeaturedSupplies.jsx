@@ -44,7 +44,7 @@ const FeaturedSupplies = () => {
           Hand-picked gear and wellness products tested and approved by our
           resident canine experts.
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {products.map((product, index) => (
             <div key={index} className="text-left">
               <div
