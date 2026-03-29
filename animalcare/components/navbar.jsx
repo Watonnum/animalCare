@@ -81,7 +81,7 @@ const Navbar = () => {
             <button
               onClick={() => {
                 // ส่ง callbackUrl เป็นพารามิเตอร์ไปหน้า login
-                router.push(`/login?callbackUrl=${pathname}`);
+                router.push(`/login?callbackUrl=/book`);
               }}
               className="px-8 py-2 border rounded-xl hover:cursor-pointer hover:scale-105 delay-50 transition-all text-white bg-[#945318] border-[#945318]"
             >
@@ -93,7 +93,7 @@ const Navbar = () => {
         {status === "authenticated" && (
           // กรณีที่ล็อคอินแล้ว
           <>
-            <span className="text-base md:text-lg font-semibold text-amber-900 truncate max-w-[120px] sm:max-w-[200px]">
+            <span className="text-base md:text-lg font-semibold text-amber-900 truncate max-w-30 sm:max-w-50">
               Hi, {session.user?.name}
             </span>
             <button
