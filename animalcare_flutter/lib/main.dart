@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'screens/main_shell.dart';
 
 void main() {
   runApp(const AnimalCareApp());
@@ -17,7 +17,7 @@ class AnimalCareApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFFFDF8F4),
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF8B4513)),
       ),
-      home: const HomeScreen(),
+      home: const MainShell(),
     );
   }
 }
