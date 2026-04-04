@@ -33,7 +33,7 @@ const page = () => {
       <motion.div variants={itemVariants} className="w-full">
         <Shop_landing />
       </motion.div>
-      <motion.div variants={itemVariants} className="w-full w-full mt-8">
+      <motion.div variants={itemVariants} className="w-full mt-8">
         <ProductGrid />
       </motion.div>
     </motion.div>

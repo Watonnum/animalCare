@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const Letbooking = () => {
   return (
-    <div className="flex flex-col justify-center items-center bg-[#FFAF71] rounded-3xl p-12 gap-6 w-full">
+    <div className="flex flex-col justify-center items-center bg-linear-to-t from-white to-[#FFAF71] rounded-3xl p-12 gap-6 w-full">
       <p className="text-5xl font-bold">Ready to Book Their Vacation ?</p>
       <div className="flex flex-col justify-center items-center text-2xl">
         <p>
@@ -13,7 +13,7 @@ const Letbooking = () => {
       </div>
       <div className="flex justify-center items-center">
         <Link
-          className="rounded-4xl py-4 px-6 font-bold text-3xl bg-white hover:scale-110 transition-all duration-200"
+          className="lobster-regular rounded-4xl py-4 px-6 font-bold text-3xl bg-white hover:scale-110 transition-all duration-200 shadow-2xl"
           href="/book"
         >
           Book now

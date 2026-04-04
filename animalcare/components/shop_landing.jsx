@@ -20,12 +20,12 @@ const Shop_landing = () => {
         </div>
         {/* shop btn */}
         <div className="flex justify-center items-center gap-4 font-bold">
-          <button className="p-4 text-xl text-white border border-[#904E0D] rounded-2xl hover:scale-105 cursor-pointer transition-all delay-75 bg-[#904E0D]">
+          {/* <button className="p-4 text-xl text-white border border-[#904E0D] rounded-2xl hover:scale-105 cursor-pointer transition-all delay-75 bg-[#904E0D]">
             {`Explore Supplies`}
           </button>
           <button className="p-4 text-xl border rounded-2xl hover:scale-105 cursor-pointer transition-all delay-75 bg-[#78C6FD] border-[#78C6FD]">
             Our Philosophy
-          </button>
+          </button> */}
         </div>
       </div>
       {/* Picture */}
