@@ -1,7 +1,12 @@
+"use client";
+import { useSession } from "next-auth/react";
 import React from "react";
 import { MdSearch, MdNotifications, MdApps } from "react-icons/md";
 
 export default function TopNavbar() {
+  const { data: session } = useSession();
+  const user = session?.user;
+  console.log(user);
   return (
     <header className="h-20 bg-white md:bg-transparent px-8 flex items-center justify-between border-b md:border-none border-gray-200 py-6">
       <div className="flex-1 max-w-xl relative">
@@ -20,14 +25,13 @@ export default function TopNavbar() {
         <button className="text-gray-400 hover:text-gray-700">
           <MdApps className="text-2xl" />
         </button>
-        <button className="hidden md:block bg-[#111928] text-white px-5 py-2 rounded-lg font-medium hover:bg-gray-800 transition-colors">
-          Add Entry
-        </button>
+        <div className="hidden md:block bg-[#111928] text-white px-5 py-2 rounded-lg font-medium hover:bg-gray-800 transition-colors select-none">
+          {user ? user.name : <>Loading...</>}
+        </div>
         <div
-          className="h-10 w-10 rounded-full bg-cover bg-center border-2 border-white shadow-sm"
+          className="h-14 w-14 rounded-full bg-cover bg-center border-2 border-white shadow-sm"
           style={{
-            backgroundImage:
-              "url('https://randomuser.me/api/portraits/women/44.jpg')",
+            backgroundImage: user?.image ? `url('${user.image}')` : "",
           }}
         ></div>
       </div>
