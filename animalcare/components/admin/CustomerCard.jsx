@@ -3,10 +3,12 @@ import React, { useState } from "react";
 import { MdEmail, MdPhone } from "react-icons/md";
 import { AiOutlineEllipsis } from "react-icons/ai";
 import { IoMdArrowDropright } from "react-icons/io";
+import EditCustomerModal from "@/components/admin/EditCustomerModal";
 
 export default function CustomerCard({ customer }) {
   const [edit, setEdit] = useState(false);
   const [roleHover, setRoleHover] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div
@@ -41,10 +43,16 @@ export default function CustomerCard({ customer }) {
           <AiOutlineEllipsis className="text-lg" />
           {edit && (
             <div className="absolute right-0 top-8 w-28 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 z-10 text-sm font-medium">
-              <div className="px-4 py-2.5 hover:bg-gray-50 cursor-pointer transition-colors text-left text-slate-700">
+              <div
+                className="px-4 py-2.5 hover:bg-gray-100 cursor-pointer transition-colors text-left text-slate-700"
+                onClick={() => {
+                  setIsModalOpen(true);
+                  setEdit(false);
+                }}
+              >
                 Edit
               </div>
-              <div className="px-4 py-2.5 hover:bg-red-50 cursor-pointer transition-colors text-left text-red-600 font-semibold">
+              <div className="px-4 py-2.5 hover:bg-red-100 cursor-pointer transition-colors text-left text-red-600 font-semibold">
                 Delete
               </div>
               <div
@@ -78,7 +86,12 @@ export default function CustomerCard({ customer }) {
           </span>
         </div>
         <div className="flex items-center text-sm text-gray-600 font-medium">
-          <MdPhone className="text-gray-400 mr-2" />{" "}
+          <MdPhone className="text-gray-400 mr-2" /> {/* Edit Modal */}
+          <EditCustomerModal
+            customer={customer}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
           {customer.phone || "No phone provided"}
         </div>
         <div className="flex items-center text-sm text-gray-600 font-medium">

@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 
-const MONGODB_URI = process.env.MONGODB_URI;
-const MONGODB_DB = process.env.MONGODB_DB;
+const MONGODB_URI = process.env.MONGODB_URI; // uri conn between mongDB -> my server
+const MONGODB_DB = process.env.MONGODB_DB; // name db
 
 if (!MONGODB_URI) {
   throw new Error(
@@ -14,12 +14,6 @@ if (!MONGODB_DB) {
     "Please define the MONGODB_DB environment variable inside .env.local",
   );
 }
-
-/**
- * Global is used here to maintain a cached connection across hot reloads
- * in development. This prevents connections from growing exponentially
- * during API Route usage.
- */
 
 let cached = global.mongo;
 
