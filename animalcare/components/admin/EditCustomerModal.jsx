@@ -93,14 +93,9 @@ export default function EditCustomerModal({ customer, isOpen, onClose }) {
               <input
                 type="email"
                 value={customer?.email}
-                // onChange={(e) => {
-                //   setInputEmail(e.target.value);
-                //   console.log(inputEmail);
-                // }}
                 disabled={true}
                 className="w-full bg-transparent border-none focus:outline-none text-gray-900 font-medium flex-1"
               />
-              {/* <MdCheckCircle className="text-green-500 ml-2 text-xl" /> */}
             </div>
           </div>
 
