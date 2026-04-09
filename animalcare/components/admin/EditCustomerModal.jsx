@@ -20,7 +20,7 @@ export default function EditCustomerModal({ customer, isOpen, onClose }) {
     customer.name || "User",
   )}&background=f3f4f6&color=4b5563`;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const updatedForm = {
       name: inputName,
       email: inputEmail,
@@ -29,7 +29,26 @@ export default function EditCustomerModal({ customer, isOpen, onClose }) {
     };
     setForm(updatedForm);
 
-    console.log("Submitted Data:", updatedForm);
+    // console.log("Submitted Data:", updatedForm);
+    try {
+      const res = await fetch(`/api/users/${customer._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedForm),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to update user");
+      }
+
+      console.log(`Update data successful at _id:${customer.id}`);
+      onClose(); // ปิด Modal
+      window.location.reload(); // รีเฟรชหน้าเพื่อให้ข้อมูลใหม่แสดง (หรือจะใช้วิธีเรียกฟังก์ชัน fetchUsers ซ้ำจาก props ก็ได้ครับ)
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
   };
 
   return (
@@ -129,7 +148,7 @@ export default function EditCustomerModal({ customer, isOpen, onClose }) {
 
           <div className="flex space-x-3">
             <button
-              onClick={() => onClose}
+              onClick={onClose}
               className="px-6 py-3 border border-gray-200 rounded-xl font-bold text-gray-700 bg-white hover:bg-gray-50 transition-colors text-sm"
             >
               Cancel

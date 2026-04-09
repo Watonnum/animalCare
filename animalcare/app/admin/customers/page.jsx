@@ -1,12 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useSession, signOut } from "next-auth/react";
 import { MdSearch } from "react-icons/md";
 import CustomerHeader from "@/components/admin/CustomerHeader";
 import CustomerCard from "@/components/admin/CustomerCard";
 
 export default function CustomersPage() {
+  const { data: session, status } = useSession();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterRole, setFilterRole] = useState("all");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -14,6 +18,20 @@ export default function CustomersPage() {
         const res = await fetch("/api/users");
         if (!res.ok) throw new Error("Failed to fetch users");
         const data = await res.json();
+
+        if (session?.user?.email) {
+          const isUserStillInDb = data.find(
+            (user) => user.email === session.user.email,
+          );
+          if (!isUserStillInDb) {
+            console.log(
+              "Account has been deleted from the database. Signing out...",
+            );
+            await signOut({ redirect: true, callbackUrl: "/login" });
+            return;
+          }
+        }
+
         setUsers(data);
       } catch (error) {
         console.error(error);
@@ -21,23 +39,48 @@ export default function CustomersPage() {
         setLoading(false);
       }
     };
-    fetchUsers();
-  }, []);
+
+    // ป้องกันการวิ่งไปดึงข้อมูลถ้ายังเช็ค Session ไม่เสร็จ (เพื่อไม่ให้ signOut ทำงานมั่ว)
+    if (status !== "loading") {
+      fetchUsers();
+    }
+  }, [session, status]);
+
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch =
+      user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.email?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesRole = filterRole === "all" || user.role === filterRole;
+    return matchesSearch && matchesRole;
+  });
 
   return (
     <div className="max-w-7xl mx-auto pb-10">
       <CustomerHeader />
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-8">
-        <div className="flex justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
           <h3 className="text-xl font-bold text-gray-900">Client Directory</h3>
-          <div className="relative w-64">
-            <MdSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search clients..."
-              className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
-            />
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative w-full sm:w-64">
+              <MdSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search clients or email..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+              />
+            </div>
+            <select
+              value={filterRole}
+              onChange={(e) => setFilterRole(e.target.value)}
+              className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium text-gray-600"
+            >
+              <option value="all">All Roles</option>
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+            </select>
           </div>
         </div>
 
@@ -47,9 +90,17 @@ export default function CustomersPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {users.map((customer) => (
-              <CustomerCard key={customer._id} customer={customer} />
-            ))}
+            {filteredUsers.length > 0 ? (
+              filteredUsers.map((customer) => (
+                <CustomerCard key={customer._id} customer={customer} />
+              ))
+            ) : (
+              <div className="col-span-full py-16 text-center bg-gray-50 border border-dashed border-gray-200 rounded-xl">
+                <p className="text-gray-500 font-medium">
+                  No clients found matching your criteria.
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>

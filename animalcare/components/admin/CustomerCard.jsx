@@ -10,6 +10,29 @@ export default function CustomerCard({ customer }) {
   const [roleHover, setRoleHover] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const handleDelete = async () => {
+    try {
+      const res = await fetch(`/api/users/${customer._id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to create user");
+      }
+
+      console.log(`DELETE successful id:${customer._id}`);
+      window.location.reload(); // รีเฟรชหน้าเพื่อให้ข้อมูลใหม่แสดง
+    } catch (error) {
+      console.error("Error DELETE user:", error);
+      alert("Error DELETE user");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div
       className="p-6 border border-gray-100 rounded-xl hover:shadow-md transition-shadow bg-gray-50/50"
@@ -52,7 +75,10 @@ export default function CustomerCard({ customer }) {
               >
                 Edit
               </div>
-              <div className="px-4 py-2.5 hover:bg-red-100 cursor-pointer transition-colors text-left text-red-600 font-semibold">
+              <div
+                className="px-4 py-2.5 hover:bg-red-100 cursor-pointer transition-colors text-left text-red-600 font-semibold"
+                onClick={handleDelete}
+              >
                 Delete
               </div>
               <div
@@ -92,7 +118,7 @@ export default function CustomerCard({ customer }) {
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
           />
-          {customer.phone || "No phone provided"}
+          {customer.phoneNum || "No phone provided"}
         </div>
         <div className="flex items-center text-sm text-gray-600 font-medium">
           <MdEmail className="text-gray-400 mr-2" /> {customer.email}

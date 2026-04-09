@@ -22,8 +22,8 @@ export default function SpotlightSuite() {
           The Presidential Sky-Suite
         </h3>
         <p className="text-sm text-gray-300 font-medium mb-6 leading-relaxed max-w-md">
-          Currently hosting: "Luna" (Golden Retriever). Checkout scheduled for
-          tomorrow 10:00 AM.
+          Currently hosting: &quot;Luna&quot; (Golden Retriever). Checkout
+          scheduled for tomorrow 10:00 AM.
         </p>
         <div className="flex space-x-3">
           <button className="bg-white text-[#1C2536] font-bold px-6 py-2.5 rounded-lg text-sm hover:bg-gray-100 transition-colors">
