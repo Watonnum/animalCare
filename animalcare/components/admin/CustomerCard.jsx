@@ -65,7 +65,7 @@ export default function CustomerCard({ customer }) {
         >
           <AiOutlineEllipsis className="text-lg" />
           {edit && (
-            <div className="absolute right-0 top-8 w-28 bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 z-10 text-sm font-medium">
+            <div className="absolute right-0 top-8 w-28 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 z-10 text-sm font-medium">
               <div
                 className="px-4 py-2.5 hover:bg-gray-100 cursor-pointer transition-colors text-left text-slate-700"
                 onClick={() => {
