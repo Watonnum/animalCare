@@ -1,7 +1,7 @@
 import React from "react";
 import { MdCalendarMonth, MdCheckCircle } from "react-icons/md";
 
-// Mock data
+//Mock data
 const schedules = [
   {
     id: 1,
@@ -57,7 +57,7 @@ export default function SchedulesPage() {
               className="flex items-center justify-between p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-colors"
             >
               <div className="flex items-center space-x-4">
-                <div className="h-12 w-12 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <div className="h-12 w-12 bg-teal-100 rounded-full flex items-center justify-center shrink-0">
                   <MdCalendarMonth className="text-teal-600 text-xl" />
                 </div>
                 <div>
