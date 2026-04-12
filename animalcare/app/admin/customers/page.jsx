@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
+import { motion } from "framer-motion";
 import { MdSearch } from "react-icons/md";
 import CustomerHeader from "@/components/admin/CustomerHeader";
 import CustomerCard from "@/components/admin/CustomerCard";
@@ -18,6 +19,9 @@ export default function CustomersPage() {
         const res = await fetch("/api/users");
         if (!res.ok) throw new Error("Failed to fetch users");
         const data = await res.json();
+
+        // Artificial delay for smooth loading animation
+        await new Promise((resolve) => setTimeout(resolve, 400));
 
         if (session?.user?.email) {
           const isUserStillInDb = data.find(
@@ -58,7 +62,7 @@ export default function CustomersPage() {
     <div className="max-w-7xl mx-auto pb-10">
       <CustomerHeader />
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-8">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-8 min-h-[400px]">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
           <h3 className="text-xl font-bold text-gray-900">Client Directory</h3>
           <div className="flex flex-col sm:flex-row gap-3">
@@ -85,11 +89,21 @@ export default function CustomersPage() {
         </div>
 
         {loading ? (
-          <div className="py-12 text-center text-gray-500 font-medium">
-            Loading customers data...
+          <div className="flex flex-col items-center justify-center py-20 w-full">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+              className="w-12 h-12 border-4 border-gray-200 border-t-teal-500 rounded-full"
+            />
+            <p className="mt-4 text-gray-500 font-medium">Loading clients...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
             {filteredUsers.length > 0 ? (
               filteredUsers.map((customer) => (
                 <CustomerCard key={customer._id} customer={customer} />
@@ -101,7 +115,7 @@ export default function CustomersPage() {
                 </p>
               </div>
             )}
-          </div>
+          </motion.div>
         )}
       </div>
     </div>
