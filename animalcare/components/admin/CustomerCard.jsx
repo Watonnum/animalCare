@@ -6,7 +6,7 @@ import { IoMdArrowDropright } from "react-icons/io";
 import { motion } from "framer-motion";
 import EditCustomerModal from "@/components/admin/EditCustomerModal";
 
-export default function CustomerCard({ customer }) {
+export default function CustomerCard({ customer, index = 0 }) {
   const [edit, setEdit] = useState(false);
   const [roleHover, setRoleHover] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,7 +38,7 @@ export default function CustomerCard({ customer }) {
     <motion.div
       initial={{ opacity: 0, x: -15 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.5, delay: 0 * 0.05 }}
+      transition={{ duration: 0.5, delay: index * 0.05 }}
       className="p-6 border border-gray-100 rounded-xl hover:shadow-md transition-shadow bg-gray-50/50"
       onMouseLeave={() => {
         if (edit) setEdit(false);

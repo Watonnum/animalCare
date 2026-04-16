@@ -105,8 +105,12 @@ export default function CustomersPage() {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
             {filteredUsers.length > 0 ? (
-              filteredUsers.map((customer) => (
-                <CustomerCard key={customer._id} customer={customer} />
+              filteredUsers.map((customer, index) => (
+                <CustomerCard
+                  key={customer._id}
+                  customer={customer}
+                  index={index}
+                />
               ))
             ) : (
               <div className="col-span-full py-16 text-center bg-gray-50 border border-dashed border-gray-200 rounded-xl">
