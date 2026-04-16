@@ -204,9 +204,9 @@ export default function InventoryPage() {
     <div className="max-w-7xl mx-auto pb-10">
       <InventoryHeader onAddClick={() => setIsAddingItem(true)} />
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative min-h-[400px]">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative min-h-100">
         {loading ? (
-          <div className="flex flex-col items-center justify-center h-full min-h-[400px] w-full">
+          <div className="flex flex-col items-center justify-center h-full min-h-100 w-full">
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ repeat: Infinity, duration: 1, ease: "linear" }}

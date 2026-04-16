@@ -1,5 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { MdEdit, MdDelete } from "react-icons/md";
+import { motion } from "framer-motion";
 
 export default function InventoryTable({
   filteredProducts,
@@ -8,7 +10,7 @@ export default function InventoryTable({
 }) {
   return (
     <div className="overflow-x-auto">
-      <table className="w-full text-left border-collapse min-w-[800px]">
+      <table className="w-full text-left border-collapse min-w-200">
         <thead>
           <tr className="bg-gray-50/50 text-gray-500 text-xs uppercase tracking-wider">
             <th className="px-6 py-4 font-bold">Item Name</th>
@@ -22,8 +24,11 @@ export default function InventoryTable({
         </thead>
         <tbody className="divide-y divide-gray-100">
           {filteredProducts.length > 0 ? (
-            filteredProducts.map((item) => (
-              <tr
+            filteredProducts.map((item, index) => (
+              <motion.tr
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
                 key={item._id}
                 className="hover:bg-gray-50/50 transition-colors cursor-pointer"
                 onClick={() => onEditClick(item)}
@@ -113,7 +118,7 @@ export default function InventoryTable({
                     </button>
                   </div>
                 </td>
-              </tr>
+              </motion.tr>
             ))
           ) : (
             <tr>

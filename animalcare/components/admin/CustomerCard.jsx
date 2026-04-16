@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { MdEmail, MdPhone } from "react-icons/md";
 import { AiOutlineEllipsis } from "react-icons/ai";
 import { IoMdArrowDropright } from "react-icons/io";
+import { motion } from "framer-motion";
 import EditCustomerModal from "@/components/admin/EditCustomerModal";
 
 export default function CustomerCard({ customer }) {
@@ -34,7 +35,10 @@ export default function CustomerCard({ customer }) {
   };
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, x: -15 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5, delay: 0 * 0.05 }}
       className="p-6 border border-gray-100 rounded-xl hover:shadow-md transition-shadow bg-gray-50/50"
       onMouseLeave={() => {
         if (edit) setEdit(false);
@@ -124,6 +128,6 @@ export default function CustomerCard({ customer }) {
           <MdEmail className="text-gray-400 mr-2" /> {customer.email}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

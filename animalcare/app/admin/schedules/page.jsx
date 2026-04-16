@@ -1,16 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  MdCalendarMonth,
-  MdCheckCircle,
-  MdSchedule,
-  MdPets,
-} from "react-icons/md";
+import ScheduleItem from "@/components/admin/schedules/ScheduleItem";
+import BulkActionToolbar from "@/components/admin/schedules/BulkActionToolbar";
 
 export default function SchedulesPage() {
   const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedIds, setSelectedIds] = useState([]);
 
   useEffect(() => {
     const fetchSchedules = async () => {
@@ -31,20 +28,55 @@ export default function SchedulesPage() {
     fetchSchedules();
   }, []);
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Confirmed":
-        return "bg-teal-100 text-teal-800";
-      case "Pending":
-      case undefined:
-      case null:
-        return "bg-yellow-100 text-yellow-800";
-      case "Completed":
-        return "bg-blue-100 text-blue-800";
-      case "Cancelled":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
+    );
+  };
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedIds(schedules.map((sch) => sch._id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  // Example API call for updating multiple statuses
+  const handleBulkUpdateStatus = async (newStatus) => {
+    if (!selectedIds.length) return;
+
+    // Show loading while updating
+    setLoading(true);
+
+    try {
+      // Loop over selected and update via API (assuming PUT /api/services or /api/services/[id])
+      // You may need to adjust this fetch logc to match your API endpoint design
+      await Promise.all(
+        selectedIds.map((id) =>
+          fetch(`/api/services/${id}`, {
+            method: "PUT", // or "PUT" depending on your API
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: newStatus }),
+          }),
+        ),
+      );
+
+      // Local state update after successful DB save
+      setSchedules((prev) =>
+        prev.map((sch) =>
+          selectedIds.includes(sch._id) ? { ...sch, status: newStatus } : sch,
+        ),
+      );
+
+      // Clear selection
+      setSelectedIds([]);
+      alert(`Updated status to ${newStatus} successfully.`);
+    } catch (error) {
+      console.error("Failed to bulk update status:", error);
+      alert("Error updating status. See console for details.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,9 +95,36 @@ export default function SchedulesPage() {
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-8 min-h-[400px]">
         <div className="space-y-4">
-          <h3 className="text-xl font-bold text-gray-900 mb-6">
-            Upcoming Appointments
-          </h3>
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+            <h3 className="text-xl font-bold text-gray-900">
+              Upcoming Appointments
+            </h3>
+
+            {/* Bulk Action Toolbar */}
+            {selectedIds.length > 0 && (
+              <BulkActionToolbar
+                selectedCount={selectedIds.length}
+                onConfirm={() => handleBulkUpdateStatus("Confirmed")}
+                onCancel={() => handleBulkUpdateStatus("Cancelled")}
+                onClear={() => setSelectedIds([])}
+              />
+            )}
+          </div>
+
+          {/* Select All Checkbox (Optional: only if you want it outside list) */}
+          {!loading && schedules.length > 0 && (
+            <div className="flex items-center px-4 py-2 border border-gray-100 rounded-xl bg-gray-50">
+              <input
+                type="checkbox"
+                onChange={handleSelectAll}
+                checked={selectedIds.length === schedules.length}
+                className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer"
+              />
+              <span className="ml-3 text-sm font-bold text-gray-700">
+                Select All
+              </span>
+            </div>
+          )}
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 w-full">
@@ -90,60 +149,14 @@ export default function SchedulesPage() {
                   No schedules found.
                 </div>
               ) : (
-                schedules.map((schedule) => (
-                  <div
+                schedules.map((schedule, index) => (
+                  <ScheduleItem
                     key={schedule._id}
-                    className="flex items-center justify-between p-4 border border-gray-100 rounded-xl hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <div className="h-12 w-12 bg-teal-100 rounded-full flex items-center justify-center shrink-0">
-                        <MdPets className="text-teal-600 text-xl" />
-                      </div>
-                      <div>
-                        <h4 className="text-gray-900 font-bold text-sm">
-                          {schedule.specialService || "Standard Service"} (
-                          {schedule.petSize} pet)
-                        </h4>
-                        <p className="text-gray-500 font-medium text-xs mt-1">
-                          {schedule.user?.name || "Unknown Client"}{" "}
-                          {schedule.user?.email && `- ${schedule.user.email}`}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="text-center hidden md:block">
-                      <p className="text-gray-900 font-medium text-sm">
-                        Duration
-                      </p>
-                      <p className="text-gray-500 text-xs mt-1 font-mono">
-                        {schedule.serviceDays} Day(s)
-                      </p>
-                    </div>
-
-                    <div className="text-center hidden md:block">
-                      <p className="text-gray-900 font-medium text-sm">Price</p>
-                      <p className="text-gray-500 text-xs mt-1 font-mono">
-                        ฿{schedule.pricing?.total || "N/A"}
-                      </p>
-                    </div>
-
-                    <div className="text-right">
-                      <p className="text-gray-900 font-bold text-sm">
-                        In: {schedule.checkIn}
-                      </p>
-                      <p className="text-gray-500 font-medium text-xs mt-1">
-                        Out: {schedule.checkOut}
-                      </p>
-                    </div>
-
-                    <div className="w-24 text-right">
-                      <span
-                        className={`px-3 py-1 text-xs font-bold rounded-full ${getStatusColor(schedule.status)}`}
-                      >
-                        {schedule.status || "Pending"}
-                      </span>
-                    </div>
-                  </div>
+                    schedule={schedule}
+                    isSelected={selectedIds.includes(schedule._id)}
+                    onToggle={toggleSelect}
+                    index={index}
+                  />
                 ))
               )}
             </motion.div>
