@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
 
 // 1. แยก Component ก้อนเมฆออกมาให้ดูง่ายขึ้น
 const CloudIcon = ({ width, height, className, delay = 0, yOffset = 10 }) => (
@@ -22,7 +24,7 @@ const CloudIcon = ({ width, height, className, delay = 0, yOffset = 10 }) => (
 
 // 2. แยก Component เครื่องหมายถูก (Success Badge) แบบใช้ Framer Motion
 const AnimatedSuccessBadge = () => (
-  <div className="relative w-32 h-32 mb-4 flex items-center justify-center">
+  <div className="relative w-24 h-24 mb-4 flex items-center justify-center shrink-0">
     {/* Outer Waves Effects */}
     <motion.div
       className="absolute inset-0 bg-[#00B4FF] rounded-full"
@@ -47,7 +49,7 @@ const AnimatedSuccessBadge = () => (
 
     {/* Checkmark Line (วาดเส้นด้วย Framer Motion) */}
     <svg
-      className="w-16 h-16 relative z-20 text-white"
+      className="w-12 h-12 relative z-20 text-[#ffffff]"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -66,19 +68,63 @@ const AnimatedSuccessBadge = () => (
 );
 
 // 3. Component หลักที่สะอาดและอ่านง่ายขึ้นมาก
-const Verified_booking = ({ router, isVisible = true }) => {
+const Verified_booking = ({ router, isVisible = true, bookingData }) => {
+  const receiptRef = useRef(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  if (!bookingData) return null;
+
+  const downloadPDF = async () => {
+    if (!receiptRef.current) return;
+    setIsDownloading(true);
+    
+    // Wait for the DOM to update (e.g. expanding scroll areas, hiding buttons)
+    setTimeout(async () => {
+      try {
+        // Create canvas from the receipt element
+        const canvas = await html2canvas(receiptRef.current, {
+          scale: 2, // higher resolution
+          backgroundColor: "#ffffff",
+          useCORS: true,
+          logging: false,
+          windowWidth: receiptRef.current.scrollWidth,
+          windowHeight: receiptRef.current.scrollHeight
+        });
+
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF({
+          orientation: "portrait",
+          unit: "mm",
+          format: "a4",
+        });
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`Booking_Receipt_${Date.now()}.pdf`);
+      } catch (error) {
+        console.error("Error generating PDF:", error);
+        alert("Could not generate PDF. Please try again.");
+      } finally {
+        setIsDownloading(false);
+      }
+    }, 150);
+  };
+
   return (
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 overflow-y-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
           {/* Main Modal Card */}
           <motion.div
-            className="bg-white p-10 rounded-[2.5rem] shadow-2xl flex flex-col justify-center items-center relative overflow-hidden max-w-sm w-full border-8 border-[#DDF3FF]"
+            ref={receiptRef}
+            className="bg-[#ffffff] p-8 md:p-10 rounded-[2.5rem] shadow-2xl flex flex-col items-center relative max-w-lg w-full border-8 border-[#DDF3FF] my-8"
             initial={{ scale: 0.8, y: 50, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
             exit={{ scale: 0.8, y: 20, opacity: 0 }}
@@ -104,37 +150,101 @@ const Verified_booking = ({ router, isVisible = true }) => {
 
             {/* Text Content */}
             <motion.h2
-              className="text-[32px] font-extrabold text-black mb-3"
+              className="text-3xl font-extrabold text-[#000000] mb-2"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
-              Success
+              Booking Confirmed!
             </motion.h2>
 
-            <motion.div
-              className="text-center text-gray-800 text-sm font-medium mb-8 space-y-1"
+            <motion.p
+              className="text-center text-[#6B7280] text-sm font-medium mb-6"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
             >
-              <p>Your booking is verified and fully updated.</p>
-              <p>Thank you for completing this step.</p>
-            </motion.div>
+              Your reservation has been successfully placed. Here is your receipt.
+            </motion.p>
 
-            {/* Action Button */}
-            <motion.button
-              type="button"
-              onClick={() => router.push("/")}
-              className="bg-[#00B4FF] hover:bg-[#009CE0] text-white font-bold py-3 px-8 w-3/4 rounded-4xl transition-colors shadow-md"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
+            {/* Receipt Details */}
+            <motion.div 
+              id="receipt-content"
+              className="w-full bg-[#FCFBF8] rounded-2xl p-6 border border-[#EBE2D3] mb-8 text-left"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.6 }}
             >
-              Done
-            </motion.button>
+              <div className="flex justify-between items-center border-b border-[#EBE2D3] pb-3 mb-4">
+                <h3 className="font-bold text-[#38261A] text-lg">
+                  Booking Receipt
+                </h3>
+                {bookingData.user && (
+                  <div className="text-right">
+                    <p className="text-xs text-[#78716C]">Booked by</p>
+                    <p className="text-sm font-bold text-[#38261A]">{bookingData.user.name || bookingData.user.email}</p>
+                  </div>
+                )}
+              </div>
+              
+              <div className="space-y-4 mb-6" style={{ maxHeight: isDownloading ? 'none' : '30vh', overflowY: isDownloading ? 'visible' : 'auto' }}>
+                {bookingData.pets.map((pet, idx) => (
+                  <div key={idx} className="flex justify-between items-start text-sm">
+                    <div className="text-[#38261A]">
+                      <span className="font-bold">{pet.name || "Unnamed"}</span> ({pet.size}) x{pet.amount}
+                      <p className="text-xs text-[#78716C] mt-1">
+                        In: {pet.checkIn} <br/>
+                        Out: {pet.checkOut}
+                      </p>
+                      <p className="text-xs text-[#78716C] mt-0.5">
+                        {pet.specialService === "morningService" ? "Morning Care" : pet.specialService === "afternoonService" ? "Afternoon Care" : "Full Day Care"}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="border-t border-[#EBE2D3] pt-4 space-y-2 text-sm text-[#38261A]">
+                <div className="flex justify-between">
+                  <span className="text-[#57534E]">Subtotal</span>
+                  <span className="font-medium">${bookingData.pricing.subtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#57534E]">Tax (8%)</span>
+                  <span className="font-medium">${bookingData.pricing.tax.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between pt-2 border-t border-[#E5E7EB] mt-2">
+                  <span className="font-bold text-lg">Total</span>
+                  <span className="font-extrabold text-lg">${bookingData.pricing.total.toFixed(2)}</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Action Buttons */}
+            {!isDownloading && (
+              <motion.div
+                className="flex gap-4 w-full px-2"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+              >
+                <button
+                  type="button"
+                  onClick={downloadPDF}
+                  disabled={isDownloading}
+                  className="flex-1 bg-white border-2 border-[#00B4FF] text-[#00B4FF] hover:bg-[#F0FAFF] font-bold py-3 px-2 rounded-3xl transition-colors shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  <span>{isDownloading ? "⏳" : "📄"}</span> {isDownloading ? "Saving..." : "Download PDF"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => router.push("/")}
+                  className="flex-1 bg-[#00B4FF] hover:bg-[#009CE0] text-white font-bold py-3 px-2 rounded-3xl transition-colors shadow-md text-center"
+                >
+                  Close & Home
+                </button>
+              </motion.div>
+            )}
           </motion.div>
         </motion.div>
       )}

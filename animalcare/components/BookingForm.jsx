@@ -36,6 +36,7 @@ const BookingForm = () => {
   const today = new Date().toLocaleDateString("en-CA");
 
   const [showSuccess, setShowSuccess] = useState(false);
+  const [completedBooking, setCompletedBooking] = useState(null);
   const [pets, setPets] = useState([defaultPet()]);
 
   const updatePet = (id, field, value) => {
@@ -129,10 +130,8 @@ const BookingForm = () => {
       });
 
       if (response.ok) {
+        setCompletedBooking(bookingData);
         setShowSuccess(true);
-        setTimeout(() => {
-          router.push("/");
-        }, 2500);
       } else {
         const result = await response.json();
         alert("Booking failed: " + (result.message || "Unknown error"));
@@ -151,7 +150,7 @@ const BookingForm = () => {
 
   return (
     <>
-      {showSuccess && <Verified_booking router={router} />}
+      {showSuccess && <Verified_booking router={router} bookingData={completedBooking} />}
 
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 w-full text-amber-950">
         {/* Left Column: Form Setup */}
