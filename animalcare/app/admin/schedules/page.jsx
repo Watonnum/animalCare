@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import ScheduleItem from "@/components/admin/schedules/ScheduleItem";
 import BulkActionToolbar from "@/components/admin/schedules/BulkActionToolbar";
 
@@ -8,6 +8,7 @@ export default function SchedulesPage() {
   const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState([]);
+  const [selectedScheduleForModal, setSelectedScheduleForModal] = useState(null);
 
   useEffect(() => {
     const fetchSchedules = async () => {
@@ -155,6 +156,7 @@ export default function SchedulesPage() {
                     schedule={schedule}
                     isSelected={selectedIds.includes(schedule._id)}
                     onToggle={toggleSelect}
+                    onViewDetails={setSelectedScheduleForModal}
                     index={index}
                   />
                 ))
@@ -163,6 +165,106 @@ export default function SchedulesPage() {
           )}
         </div>
       </div>
+
+      {/* Detail Modal */}
+      <AnimatePresence>
+        {selectedScheduleForModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedScheduleForModal(null)}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              className="relative bg-white rounded-3xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto flex flex-col"
+            >
+              <div className="p-6 border-b border-gray-100 flex justify-between items-center sticky top-0 bg-white/90 backdrop-blur-sm z-10">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900">Booking Details</h3>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Client: {selectedScheduleForModal.user?.name || "Unknown"} ({selectedScheduleForModal.user?.email || "N/A"})
+                  </p>
+                </div>
+                <button
+                  onClick={() => setSelectedScheduleForModal(null)}
+                  className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="p-6 space-y-6">
+                <div className="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
+                  <div>
+                    <p className="text-sm text-gray-500">Total Price</p>
+                    <p className="text-xl font-bold text-teal-700">
+                      ฿{selectedScheduleForModal.pricing?.total || 0}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-500">Status</p>
+                    <p className="text-sm font-bold capitalize mt-1">
+                      {selectedScheduleForModal.status || "Pending"}
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-lg font-bold text-gray-900 mb-4 border-b pb-2">Pets ({selectedScheduleForModal.pets?.length || 0})</h4>
+                  <div className="space-y-4">
+                    {selectedScheduleForModal.pets?.map((pet, idx) => (
+                      <div key={idx} className="bg-white border rounded-xl p-4 shadow-sm relative">
+                        <div className="absolute top-4 right-4 bg-teal-50 text-teal-700 text-xs font-bold px-2 py-1 rounded-lg">
+                          x{pet.amount || 1}
+                        </div>
+                        <h5 className="font-bold text-gray-900 text-base mb-1">
+                          {pet.name || "Unnamed"} <span className="text-gray-400 font-normal text-sm">({pet.breed || "Unknown Breed"})</span>
+                        </h5>
+                        <div className="grid grid-cols-2 gap-y-2 mt-4 text-sm">
+                          <div>
+                            <span className="text-gray-500">Size:</span> <span className="font-medium capitalize">{pet.size}</span>
+                          </div>
+                          <div>
+                            <span className="text-gray-500">Special Care:</span> <span className="font-medium">{pet.specialService === "morningService" ? "Morning" : pet.specialService === "afternoonService" ? "Afternoon" : "Full Day"}</span>
+                          </div>
+                          <div>
+                            <span className="text-gray-500">Check-In:</span> <span className="font-medium">{pet.checkIn}</span>
+                          </div>
+                          <div>
+                            <span className="text-gray-500">Check-Out:</span> <span className="font-medium">{pet.checkOut}</span>
+                          </div>
+                        </div>
+
+                        {(pet.allergies || pet.instructions) && (
+                          <div className="mt-4 pt-4 border-t space-y-2 text-sm">
+                            {pet.allergies && (
+                              <div className="flex gap-2">
+                                <span className="text-red-500 font-bold shrink-0">Allergies:</span>
+                                <span className="text-gray-700">{pet.allergies}</span>
+                              </div>
+                            )}
+                            {pet.instructions && (
+                              <div className="flex gap-2">
+                                <span className="text-amber-600 font-bold shrink-0">Instructions:</span>
+                                <span className="text-gray-700">{pet.instructions}</span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

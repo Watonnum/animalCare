@@ -39,10 +39,15 @@ const Navbar = () => {
       name: "Service",
       path: "/services",
     },
+    // {
+    //   id: 3,
+    //   name: "Shop",
+    //   path: "/shop",
+    // },
     {
       id: 3,
-      name: "Shop",
-      path: "/shop",
+      name: "Book",
+      path: "/book",
     },
   ];
 

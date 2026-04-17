@@ -24,19 +24,35 @@ export default function ScheduleItem({
   schedule,
   isSelected,
   onToggle,
+  onViewDetails,
   index = 0,
 }) {
+  const totalPets = schedule.pets?.reduce((acc, pet) => acc + (pet.amount || 1), 0) || 0;
+  const firstPet = schedule.pets?.[0] || {};
+  
+  // Calculate longest service duration from pets
+  let maxDuration = 0;
+  schedule.pets?.forEach(pet => {
+    const start = new Date(pet.checkIn);
+    const end = new Date(pet.checkOut);
+    if (start && end && end.getTime() >= start.getTime()) {
+      const diffTime = Math.abs(end.getTime() - start.getTime());
+      const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      maxDuration = Math.max(maxDuration, nights === 0 ? 1 : nights);
+    }
+  });
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
-      className={`flex items-center p-4 border rounded-xl hover:bg-gray-50 transition-colors ${
+      className={`flex items-center p-4 border rounded-xl hover:bg-gray-50 transition-colors cursor-pointer ${
         isSelected ? "border-teal-500 bg-teal-50/30" : "border-gray-100"
       }`}
+      onClick={() => onViewDetails(schedule)}
     >
       {/* Checkbox */}
-      <div className="flex items-center shrink-0 mr-4">
+      <div className="flex items-center shrink-0 mr-4" onClick={(e) => e.stopPropagation()}>
         <input
           type="checkbox"
           checked={isSelected}
@@ -52,8 +68,7 @@ export default function ScheduleItem({
           </div>
           <div>
             <h4 className="text-gray-900 font-bold text-sm">
-              {schedule.specialService || "Standard Service"} (
-              {schedule.petSize} pet)
+              Booking for {totalPets} {totalPets === 1 ? "Pet" : "Pets"}
             </h4>
             <p className="text-gray-500 font-medium text-xs mt-1">
               {schedule.user?.name || "Unknown Client"}{" "}
@@ -65,7 +80,7 @@ export default function ScheduleItem({
         <div className="text-center hidden md:block">
           <p className="text-gray-900 font-medium text-sm">Duration</p>
           <p className="text-gray-500 text-xs mt-1 font-mono">
-            {schedule.serviceDays} Day(s)
+            {maxDuration} Day(s) max
           </p>
         </div>
 
@@ -78,10 +93,10 @@ export default function ScheduleItem({
 
         <div className="text-right">
           <p className="text-gray-900 font-bold text-sm">
-            In: {schedule.checkIn}
+            In: {firstPet.checkIn || "N/A"}
           </p>
           <p className="text-gray-500 font-medium text-xs mt-1">
-            Out: {schedule.checkOut}
+            Out: {firstPet.checkOut || "N/A"}
           </p>
         </div>
 

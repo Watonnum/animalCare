@@ -125,7 +125,7 @@ const Verified_booking = ({ router, isVisible = true }) => {
             {/* Action Button */}
             <motion.button
               type="button"
-              onClick={() => router.push("/shop")}
+              onClick={() => router.push("/")}
               className="bg-[#00B4FF] hover:bg-[#009CE0] text-white font-bold py-3 px-8 w-3/4 rounded-4xl transition-colors shadow-md"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

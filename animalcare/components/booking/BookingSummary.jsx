@@ -1,9 +1,7 @@
 import React from "react";
 
 export default function BookingSummary({
-  petSize,
-  serviceDays,
-  specialService,
+  pets,
   subtotal,
   tax,
   total,
@@ -12,65 +10,76 @@ export default function BookingSummary({
   isButtonDisabled,
 }) {
   return (
-    <div className="w-full lg:w-100 flex flex-col gap-6">
-      <div className="bg-[#EBE2D3] rounded-4xl p-8 flex flex-col">
-        <h2 className="text-2xl font-bold mb-8">Booking Summary</h2>
+    <div className="w-full flex flex-col gap-6">
+      <div className="bg-[#FCFBF8] rounded-3xl p-8 flex flex-col shadow-sm border border-[#EBE2D3]">
+        <h2 className="text-xl font-bold mb-6 text-[#38261A]">Booking Summary</h2>
 
-        <div className="flex flex-col gap-6 mb-8 border-b border-[#D6CBB9] pb-8">
-          <div className="flex justify-between items-start">
-            <div>
-              <h4 className="font-bold text-sm">
-                Premium Suite ({petSize === "small" ? "Small" : "Large"})
-              </h4>
-              <p className="text-xs text-stone-500">
-                {serviceDays} {serviceDays === 1 ? "Day" : "Days"} • $
-                {prices[petSize]}/day
-              </p>
-            </div>
-            <span className="font-bold text-sm">
-              ${(serviceDays * prices[petSize]).toFixed(2)}
-            </span>
-          </div>
+        <div className="flex flex-col gap-6 mb-6 border-b border-[#EBE2D3] pb-6">
+          {pets.map((pet, index) => {
+            const start = new Date(pet.checkIn);
+            const end = new Date(pet.checkOut);
+            let nights = 0;
+            if (start && end && end.getTime() >= start.getTime()) {
+              const diffTime = Math.abs(end.getTime() - start.getTime());
+              nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            }
+            const serviceDays = nights === 0 ? 1 : nights;
+            const itemTotal = serviceDays * prices[pet.size] * pet.amount;
 
-          {specialService && (
-            <div className="flex justify-between items-start">
-              <div>
-                <h4 className="font-bold text-sm">
-                  {specialService === "morningService" &&
-                    "Morning Care (3 Hrs)"}
-                  {specialService === "afternoonService" &&
-                    "Afternoon Care (3 Hrs)"}
-                  {specialService === "fullDayService" &&
-                    "Full Day Care (24 Hrs)"}
-                </h4>
-                <p className="text-xs text-stone-500">
-                  {serviceDays} {serviceDays === 1 ? "Day" : "Days"} • $
-                  {prices[specialService]}/day
-                </p>
+            return (
+              <div key={pet.id} className="flex flex-col gap-3">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h4 className="font-semibold text-sm text-[#38261A]">
+                      Pet {index + 1}: {pet.name || "Unnamed"} ({pet.size === "small" ? "Small" : "Large"})
+                    </h4>
+                    <p className="text-xs text-stone-500 mt-1">
+                      x{pet.amount} - {serviceDays} {serviceDays === 1 ? "Day" : "Days"}
+                    </p>
+                  </div>
+                  <span className="font-semibold text-sm text-[#38261A]">
+                    ${itemTotal.toFixed(2)}
+                  </span>
+                </div>
+                
+                {pet.specialService && (
+                  <div className="flex justify-between items-start mt-1">
+                    <div>
+                      <h4 className="text-sm text-[#38261A]">
+                        {pet.specialService === "morningService" && "Morning Care (3 Hrs)"}
+                        {pet.specialService === "afternoonService" && "Afternoon Care (3 Hrs)"}
+                        {pet.specialService === "fullDayService" && "Full Day Care (24 Hrs)"}
+                      </h4>
+                      <p className="text-xs text-stone-500 mt-1">
+                        x{pet.amount} - {serviceDays} {serviceDays === 1 ? "Day" : "Days"}
+                      </p>
+                    </div>
+                    <span className="text-sm text-[#38261A]">
+                      ${(prices[pet.specialService] * serviceDays * pet.amount).toFixed(2)}
+                    </span>
+                  </div>
+                )}
               </div>
-              <span className="font-bold text-sm">
-                ${(prices[specialService] * serviceDays).toFixed(2)}
-              </span>
-            </div>
-          )}
+            );
+          })}
         </div>
 
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-bold text-stone-600">Subtotal</span>
-          <span className="text-sm font-bold text-stone-800">
+        <div className="flex justify-between items-center mb-3">
+          <span className="text-sm text-stone-600">Subtotal</span>
+          <span className="text-sm font-semibold text-[#38261A]">
             ${subtotal.toFixed(2)}
           </span>
         </div>
-        <div className="flex justify-between items-center mb-8">
-          <span className="text-sm font-bold text-stone-600">Tax (8%)</span>
-          <span className="text-sm font-bold text-stone-800">
+        <div className="flex justify-between items-center mb-6">
+          <span className="text-sm text-stone-600">Tax (8%)</span>
+          <span className="text-sm font-semibold text-[#38261A]">
             ${tax.toFixed(2)}
           </span>
         </div>
 
-        <div className="flex justify-between items-center mb-8">
-          <span className="text-xl font-bold">Total</span>
-          <span className="text-2xl font-extrabold text-[#9A561D]">
+        <div className="flex justify-between items-center mb-8 pt-6 border-t border-[#EBE2D3]">
+          <span className="text-lg font-bold text-[#38261A]">Total</span>
+          <span className="text-2xl font-extrabold text-[#38261A]">
             ${total.toFixed(2)}
           </span>
         </div>
@@ -78,43 +87,14 @@ export default function BookingSummary({
         <button
           onClick={handleCompleteBooking}
           disabled={isButtonDisabled}
-          className="w-full py-4 bg-[#8C4A0F] text-white rounded-2xl font-bold text-lg hover:bg-[#723C0C] transition-colors flex items-center justify-center gap-2 shadow-md disabled:bg-stone-400 disabled:cursor-not-allowed"
+          className="w-full py-4 bg-[#38261A] text-white rounded-xl font-bold text-lg hover:bg-[#2C1D13] transition-colors flex items-center justify-center gap-2 disabled:bg-stone-300 disabled:cursor-not-allowed"
         >
-          Complete Booking
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M14 5l7 7m0 0l-7 7m7-7H3"
-            ></path>
-          </svg>
+          Complete Booking →
         </button>
 
         <p className="text-center text-[10px] font-bold tracking-widest text-stone-500 mt-4 uppercase">
           SECURE PAYMENT GUARANTEED
         </p>
-      </div>
-
-      {/* Small Badges below summary */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-[#F5F2EC] py-3 px-2 rounded-2xl flex flex-col items-center justify-center gap-1">
-          <span className="text-[#9A561D] text-lg">🛡️</span>
-          <span className="text-[10px] font-bold text-stone-600">
-            Certified Care
-          </span>
-        </div>
-        <div className="bg-[#F5F2EC] py-3 px-2 rounded-2xl flex flex-col items-center justify-center gap-1">
-          <span className="text-[#9A561D] text-lg">🤝</span>
-          <span className="text-[10px] font-bold text-stone-600">
-            24/7 Support
-          </span>
-        </div>
       </div>
     </div>
   );
