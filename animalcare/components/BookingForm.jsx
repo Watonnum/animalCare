@@ -82,7 +82,6 @@ const BookingForm = () => {
     }
   };
 
-  // Calculate pricing
   let subtotal = 0;
 
   pets.forEach((pet) => {
@@ -97,7 +96,6 @@ const BookingForm = () => {
 
     const serviceDays = nights === 0 ? 1 : nights;
 
-    // Base price
     const basePrice = prices[pet.size] * serviceDays * pet.amount;
     const specialServicePrice = pet.specialService
       ? prices[pet.specialService] * serviceDays * pet.amount
@@ -153,7 +151,6 @@ const BookingForm = () => {
       {showSuccess && <Verified_booking router={router} bookingData={completedBooking} />}
 
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 w-full text-amber-950">
-        {/* Left Column: Form Setup */}
         <div className="flex-1 flex flex-col gap-6">
           <div className="flex flex-col gap-2 mb-2">
             <h1 className="text-4xl md:text-5xl font-extrabold text-[#38261A] tracking-tight font-serif">

@@ -44,8 +44,8 @@ export default function EditCustomerModal({ customer, isOpen, onClose }) {
       }
 
       console.log(`Update data successful at _id:${customer.id}`);
-      onClose(); // ปิด Modal
-      window.location.reload(); // รีเฟรชหน้าเพื่อให้ข้อมูลใหม่แสดง (หรือจะใช้วิธีเรียกฟังก์ชัน fetchUsers ซ้ำจาก props ก็ได้ครับ)
+      onClose();
+      window.location.reload();
     } catch (error) {
       console.error("Error updating user:", error);
     }
@@ -134,18 +134,12 @@ export default function EditCustomerModal({ customer, isOpen, onClose }) {
                 }}
                 className="w-full bg-transparent border-none focus:outline-none text-gray-900 font-medium flex-1"
               />
-              {/* <MdCheckCircle className="text-green-500 ml-2 text-xl" /> */}
             </div>
           </div>
         </div>
 
         {/* Footer Actions */}
         <div className="flex justify-between items-center mt-10">
-          {/* <button className="flex items-center text-red-700 bg-[#FFF1F2] px-5 py-3 rounded-xl font-bold text-sm hover:bg-red-100 transition-colors">
-            <MdDelete className="mr-2 text-lg" />
-            Delete Account
-          </button> */}
-
           <div className="flex space-x-3">
             <button
               onClick={onClose}

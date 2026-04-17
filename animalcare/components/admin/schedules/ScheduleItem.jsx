@@ -30,7 +30,6 @@ export default function ScheduleItem({
   const totalPets = schedule.pets?.reduce((acc, pet) => acc + (pet.amount || 1), 0) || 0;
   const firstPet = schedule.pets?.[0] || {};
   
-  // Calculate longest service duration from pets
   let maxDuration = 0;
   schedule.pets?.forEach(pet => {
     const start = new Date(pet.checkIn);
@@ -51,7 +50,6 @@ export default function ScheduleItem({
       }`}
       onClick={() => onViewDetails(schedule)}
     >
-      {/* Checkbox */}
       <div className="flex items-center shrink-0 mr-4" onClick={(e) => e.stopPropagation()}>
         <input
           type="checkbox"
