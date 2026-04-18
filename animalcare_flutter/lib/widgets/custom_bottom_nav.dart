@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int selectedIndex;
-  final ValueChanged<int> onItemTapped;
+  final Function(int) onItemTapped;
 
   const CustomBottomNav({
     super.key,
@@ -20,13 +20,11 @@ class CustomBottomNav extends StatelessWidget {
       child: SizedBox(
         height: 60,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _buildNavItem(Icons.home_filled, "Home", 0),
-            _buildNavItem(Icons.shopping_bag, "Shop", 1),
-            _buildNavItem(Icons.pets, "Booking", 2),
-            _buildNavItem(Icons.description, "Health", 3),
+            _buildNavItem(Icons.pets, "Booking", 1),
           ],
         ),
       ),

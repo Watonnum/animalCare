@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'home_screen.dart';
-import 'shop_screen.dart';
 import 'booking_screen.dart';
 import '../widgets/custom_bottom_nav.dart';
 
@@ -16,8 +15,8 @@ class _MainShellState extends State<MainShell> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
-    // Only navigate to implemented screens (0=Home, 1=Shop, 2=Boarding)
-    if (index <= 2) setState(() => _selectedIndex = index);
+    // Only navigate to implemented screens (0=Home, 1=Booking)
+    if (index <= 1) setState(() => _selectedIndex = index);
   }
 
   @override
@@ -26,7 +25,7 @@ class _MainShellState extends State<MainShell> {
       extendBody: true,
       body: IndexedStack(
         index: _selectedIndex,
-        children: const [HomeScreen(), ShopScreen(), BookingScreen()],
+        children: const [HomeScreen(), BookingScreen()],
       ),
       floatingActionButton: _selectedIndex == 0
           ? FloatingActionButton(

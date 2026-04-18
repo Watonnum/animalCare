@@ -23,6 +23,7 @@ const CloudIcon = ({ width, height, className, delay = 0, yOffset = 10 }) => (
 
 const AnimatedSuccessBadge = () => (
   <div className="relative w-24 h-24 mb-4 flex items-center justify-center shrink-0">
+    {/* Outer Waves Effects */}
     <motion.div
       className="absolute inset-0 bg-[#00B4FF] rounded-full"
       initial={{ scale: 0.8, opacity: 0 }}
@@ -30,6 +31,7 @@ const AnimatedSuccessBadge = () => (
       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
     />
 
+    {/* Main Circles */}
     <motion.div
       className="absolute inset-2 bg-[#FFD700] rounded-full z-10 border-4 border-[#00A1E4]"
       initial={{ scale: 0 }}
@@ -62,7 +64,6 @@ const AnimatedSuccessBadge = () => (
   </div>
 );
 
-// 3. Component หลักที่สะอาดและอ่านง่ายขึ้นมาก
 const Verified_booking = ({ router, isVisible = true, bookingData }) => {
   const receiptRef = useRef(null);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -76,7 +77,7 @@ const Verified_booking = ({ router, isVisible = true, bookingData }) => {
     setTimeout(async () => {
       try {
         const canvas = await html2canvas(receiptRef.current, {
-          scale: 2,
+          scale: 2, // higher resolution
           backgroundColor: "#ffffff",
           useCORS: true,
           logging: false,
@@ -114,6 +115,7 @@ const Verified_booking = ({ router, isVisible = true, bookingData }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
+          {/* Main Modal Card */}
           <motion.div
             ref={receiptRef}
             className="bg-[#ffffff] p-8 md:p-10 rounded-[2.5rem] shadow-2xl flex flex-col items-center relative max-w-lg w-full border-8 border-[#DDF3FF] my-8"
@@ -122,6 +124,7 @@ const Verified_booking = ({ router, isVisible = true, bookingData }) => {
             exit={{ scale: 0.8, y: 20, opacity: 0 }}
             transition={{ type: "spring", bounce: 0.4, duration: 0.6 }}
           >
+            {/* Decorative Clouds */}
             <CloudIcon
               width="40"
               height="25"
@@ -136,8 +139,10 @@ const Verified_booking = ({ router, isVisible = true, bookingData }) => {
               yOffset={-10}
             />
 
+            {/* Success Animation */}
             <AnimatedSuccessBadge />
 
+            {/* Text Content */}
             <motion.h2
               className="text-3xl font-extrabold text-[#000000] mb-2"
               initial={{ opacity: 0, y: 10 }}
@@ -157,6 +162,7 @@ const Verified_booking = ({ router, isVisible = true, bookingData }) => {
               receipt.
             </motion.p>
 
+            {/* Receipt Details */}
             <motion.div
               id="receipt-content"
               className="w-full bg-[#FCFBF8] rounded-2xl p-6 border border-[#EBE2D3] mb-8 text-left"
@@ -231,6 +237,7 @@ const Verified_booking = ({ router, isVisible = true, bookingData }) => {
               </div>
             </motion.div>
 
+            {/* Action Buttons */}
             {!isDownloading && (
               <motion.div
                 className="flex gap-4 w-full px-2"
