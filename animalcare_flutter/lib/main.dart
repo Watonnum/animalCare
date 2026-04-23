@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
-import 'screens/main_shell.dart';
+import 'package:animalcare_flutter/screen/screen_login.dart';
 
 void main() {
-  runApp(const AnimalCareApp());
+  runApp(const MyApp());
 }
 
-class AnimalCareApp extends StatelessWidget {
-  const AnimalCareApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Animal Care',
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFFDF8F4),
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF8B4513)),
-      ),
-      home: const MainShell(),
+      home: LoginScreen(),
     );
   }
 }
