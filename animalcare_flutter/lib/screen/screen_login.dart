@@ -1,3 +1,4 @@
+import 'package:animalcare_flutter/screen/screen_main.dart';
 import 'package:animalcare_flutter/services/auth_service.dart';
 import 'package:animalcare_flutter/widget/login/google_sign_in_button.dart';
 import 'package:animalcare_flutter/widget/login/labeled_text_field.dart';
@@ -72,9 +73,8 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final result = await AuthService.signInWithEmail(email, password);
       if (!mounted) return;
-      // TODO: เก็บ result.accessToken และ navigate ไปหน้าหลัก
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Welcome, ${result.user['name']}!')),
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => MainScreen(user: result.user)),
       );
     } catch (e) {
       if (!mounted) return;
@@ -91,12 +91,9 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       final result = await AuthService.signInWithGoogle();
       if (!mounted) return;
-      // TODO: เก็บ result.accessToken และ navigate ไปหน้าหลัก
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Welcome, ${result.user['name']}!')),
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => MainScreen(user: result.user)),
       );
-      // result.accessToken // long string
-      // result.user // {id,name,email,role}
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

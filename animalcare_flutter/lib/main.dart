@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:animalcare_flutter/screen/screen_login.dart';
+import 'package:animalcare_flutter/screen/screen_splash.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginScreen(),
+      home: SplashScreen(),
     );
   }
 }
