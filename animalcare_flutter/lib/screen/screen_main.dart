@@ -16,23 +16,32 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
-  late final List<Widget> _screens;
-
-  @override
-  void initState() {
-    super.initState();
-    _screens = [
-      HomeScreen(user: widget.user),
-      const BookingsScreen(),
-      const HistoryScreen(),
-      AccountScreen(user: widget.user),
-    ];
+  Widget _buildCurrentScreen() {
+    switch (_currentIndex) {
+      case 0:
+        return HomeScreen(
+          key: const ValueKey(0),
+          user: widget.user,
+          onGoToBookings: () => setState(() => _currentIndex = 1),
+        );
+      case 1:
+        return BookingsScreen(key: const ValueKey(1), user: widget.user);
+      case 2:
+        return HistoryScreen(key: ValueKey(2), user: widget.user);
+      case 3:
+        return AccountScreen(key: ValueKey(3), user: widget.user);
+      default:
+        return const SizedBox.shrink();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _screens),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        child: _buildCurrentScreen(),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),

@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:animalcare_flutter/widget/home/book_a_stay_card.dart';
-import 'package:animalcare_flutter/widget/home/offer_card.dart';
-import 'package:animalcare_flutter/widget/home/small_service_card.dart';
-import 'package:animalcare_flutter/widget/home/update_card.dart';
-import 'package:animalcare_flutter/widget/home/vet_consultation_card.dart';
+import 'package:animalcare_flutter/widget/home/active_booking_card.dart';
+import 'package:animalcare_flutter/widget/home/newsletter_card.dart';
+import 'package:animalcare_flutter/widget/home/service_care_card.dart';
 
 class HomeScreen extends StatelessWidget {
   final Map<String, dynamic> user;
+  final VoidCallback? onGoToBookings;
 
-  const HomeScreen({super.key, required this.user});
-
-  String get _greeting {
-    final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good Morning';
-    if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
-  }
+  const HomeScreen({super.key, required this.user, this.onGoToBookings});
 
   @override
   Widget build(BuildContext context) {
@@ -23,37 +15,35 @@ class HomeScreen extends StatelessWidget {
     final firstName = name.split(' ').first;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F4F8),
+      backgroundColor: const Color(0xFFF8F0E8),
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
             _buildAppBar(firstName),
-            _buildGreeting(firstName),
-            _buildServiceCards(),
-            _buildSectionHeader('Exclusive Offers', showSeeAll: true),
+            _buildHeader(firstName),
+            _buildStartBookingCard(firstName),
+            _buildSectionHeader('Our Specialized Care'),
+            _buildSpecializedCare(),
+            _buildSectionHeader('Your Active Bookings'),
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: OfferCard(
-                  badge: 'LIMITED TIME',
-                  title: '20% off',
-                  subtitle: 'For first-time boarding bookings.',
+                child: ActiveBookingCard(
+                  title: 'Weekend Getaway',
+                  dateRange: 'Aug 24 - Aug 26',
+                  roomType: 'Premium Large Suite',
+                  status: 'CONFIRMED',
                 ),
               ),
             ),
-            _buildSectionHeader('Latest Updates'),
-            _buildLatestUpdates(),
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                child: NewsletterCard(),
+              ),
+            ),
             const SliverToBoxAdapter(child: SizedBox(height: 100)),
           ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        backgroundColor: const Color(0xFF2D4EE0),
-        icon: const Icon(Icons.directions_walk, color: Colors.white),
-        label: const Text(
-          'Book a Walk',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
       ),
     );
@@ -65,25 +55,9 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
         child: Row(
           children: [
-            const Icon(Icons.pets, color: Color(0xFF2D4EE0), size: 26),
-            const SizedBox(width: 8),
-            const Text(
-              'PawsStay',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF2D4EE0),
-              ),
-            ),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.notifications_none_outlined, size: 26),
-              onPressed: () {},
-            ),
-            const SizedBox(width: 4),
             CircleAvatar(
               radius: 18,
-              backgroundColor: const Color(0xFF2D4EE0),
+              backgroundColor: const Color(0xFFD4651A),
               child: Text(
                 firstName.isNotEmpty ? firstName[0].toUpperCase() : 'U',
                 style: const TextStyle(
@@ -92,40 +66,46 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(width: 10),
+            Text(
+              firstName,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF3A1A00),
+              ),
+            ),
+            const Spacer(),
+            IconButton(
+              icon: const Icon(Icons.notifications_outlined, size: 26),
+              onPressed: () {},
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildGreeting(String firstName) {
+  Widget _buildHeader(String firstName) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '$_greeting, $firstName',
-              style: const TextStyle(fontSize: 14, color: Colors.black54),
-            ),
-            const SizedBox(height: 4),
-            RichText(
-              text: const TextSpan(
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-                children: [
-                  TextSpan(text: "Your pet's "),
-                  TextSpan(
-                    text: 'perfect stay',
-                    style: TextStyle(color: Color(0xFF2D4EE0)),
-                  ),
-                  TextSpan(text: '\nstarts here.'),
-                ],
+            const Text(
+              "Book Your Dog's\nNext Stay",
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF6B2800),
+                height: 1.2,
               ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Premium boarding and wellness for\nyour best friend.',
+              style: TextStyle(fontSize: 14, color: Colors.black54),
             ),
           ],
         ),
@@ -133,92 +113,118 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildServiceCards() {
+  Widget _buildStartBookingCard(String firstName) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: GestureDetector(
+          onTap: onGoToBookings,
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: const Color(0xFF7B3300),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.calendar_month_outlined,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Start Booking',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        'Reserve a spot for $firstName',
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(
+                  Icons.chevron_right,
+                  color: Colors.white70,
+                  size: 28,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1A1A1A),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSpecializedCare() {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
-            BookAStayCard(onTap: () {}),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: SmallServiceCard(
-                    icon: Icons.spa_outlined,
-                    title: 'Pet Spa',
-                    subtitle: 'Relaxation & baths',
-                    onTap: () {},
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: SmallServiceCard(
-                    icon: Icons.shopping_bag_outlined,
-                    title: 'Shop',
-                    subtitle: 'Treats & gear',
-                    onTap: () {},
-                  ),
-                ),
-              ],
+            ServiceCareCard(
+              iconData: Icons.pets,
+              iconBgColor: const Color(0xFFFFE5D0),
+              iconColor: const Color(0xFFD4651A),
+              title: 'Large Breed Sanctuary',
+              description:
+                  'Spacious private suites (8x8ft) with climate control and 24/7 supervision. Includes 3 outdoor play sessions daily in our secure acre-wide field.',
+              tags: const ['Max Comfort', 'Active Play'],
             ),
             const SizedBox(height: 12),
-            VetConsultationCard(onTap: () {}),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(String title, {bool showSeeAll = false}) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 28, 20, 12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ServiceCareCard(
+              iconData: Icons.emoji_nature_outlined,
+              iconBgColor: const Color(0xFFD0E8F5),
+              iconColor: const Color(0xFF2E7EC8),
+              title: 'Small Dog Social Club',
+              description:
+                  'Dedicated quiet zone for pups under 25lbs. Features cozy fleece bedding, socialization hours with other small friends, and supervised indoor play.',
+              tags: const ['Safe Space', 'Socialization'],
             ),
-            if (showSeeAll)
-              TextButton(
-                onPressed: () {},
-                child: const Text(
-                  'See all',
-                  style: TextStyle(color: Color(0xFF2D4EE0)),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLatestUpdates() {
-    return SliverToBoxAdapter(
-      child: SizedBox(
-        height: 200,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          children: const [
-            UpdateCard(
-              title: 'New Grooming Services Available',
-              subtitle:
-                  'Full-service spa packages now include blueberry facials and paw balm.',
-            ),
-            SizedBox(width: 12),
-            UpdateCard(
-              title: 'Pet Safety Tips',
-              subtitle:
-                  'Learn how to keep your pet safe with our professional guides.',
-            ),
-            SizedBox(width: 12),
-            UpdateCard(
-              title: 'Holiday Boarding Open',
-              subtitle:
-                  'Book early for the holiday season. Limited spots available.',
+            const SizedBox(height: 12),
+            ServiceCareCard(
+              iconData: Icons.medical_services_outlined,
+              iconBgColor: const Color(0xFFFFE5D0),
+              iconColor: const Color(0xFFD4651A),
+              title: 'Wellness & Grooming',
+              description:
+                  "Complement your pet's stay with professional grooming, nail trims, and customized health check-ups by our on-site nursing staff.",
+              tags: const ['Spa Treatment', 'Health First'],
             ),
           ],
         ),
