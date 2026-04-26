@@ -8,7 +8,8 @@ export default function SchedulesPage() {
   const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState([]);
-  const [selectedScheduleForModal, setSelectedScheduleForModal] = useState(null);
+  const [selectedScheduleForModal, setSelectedScheduleForModal] =
+    useState(null);
 
   useEffect(() => {
     const fetchSchedules = async () => {
@@ -43,34 +44,28 @@ export default function SchedulesPage() {
     }
   };
 
-  // Example API call for updating multiple statuses
   const handleBulkUpdateStatus = async (newStatus) => {
     if (!selectedIds.length) return;
 
-    // Show loading while updating
     setLoading(true);
 
     try {
-      // Loop over selected and update via API (assuming PUT /api/services or /api/services/[id])
-      // You may need to adjust this fetch logc to match your API endpoint design
       await Promise.all(
         selectedIds.map((id) =>
           fetch(`/api/services/${id}`, {
-            method: "PUT", // or "PUT" depending on your API
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ status: newStatus }),
           }),
         ),
       );
 
-      // Local state update after successful DB save
       setSchedules((prev) =>
         prev.map((sch) =>
           selectedIds.includes(sch._id) ? { ...sch, status: newStatus } : sch,
         ),
       );
 
-      // Clear selection
       setSelectedIds([]);
       alert(`Updated status to ${newStatus} successfully.`);
     } catch (error) {
@@ -94,7 +89,7 @@ export default function SchedulesPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-8 min-h-[400px]">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-8 min-h-100">
         <div className="space-y-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
             <h3 className="text-xl font-bold text-gray-900">
@@ -112,7 +107,6 @@ export default function SchedulesPage() {
             )}
           </div>
 
-          {/* Select All Checkbox (Optional: only if you want it outside list) */}
           {!loading && schedules.length > 0 && (
             <div className="flex items-center px-4 py-2 border border-gray-100 rounded-xl bg-gray-50">
               <input
@@ -184,9 +178,12 @@ export default function SchedulesPage() {
             >
               <div className="p-6 border-b border-gray-100 flex justify-between items-center sticky top-0 bg-white/90 backdrop-blur-sm z-10">
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">Booking Details</h3>
+                  <h3 className="text-xl font-bold text-gray-900">
+                    Booking Details
+                  </h3>
                   <p className="text-sm text-gray-500 mt-1">
-                    Client: {selectedScheduleForModal.user?.name || "Unknown"} ({selectedScheduleForModal.user?.email || "N/A"})
+                    Client: {selectedScheduleForModal.user?.name || "Unknown"} (
+                    {selectedScheduleForModal.user?.email || "N/A"})
                   </p>
                 </div>
                 <button
@@ -214,28 +211,48 @@ export default function SchedulesPage() {
                 </div>
 
                 <div>
-                  <h4 className="text-lg font-bold text-gray-900 mb-4 border-b pb-2">Pets ({selectedScheduleForModal.pets?.length || 0})</h4>
+                  <h4 className="text-lg font-bold text-gray-900 mb-4 border-b pb-2">
+                    Pets ({selectedScheduleForModal.pets?.length || 0})
+                  </h4>
                   <div className="space-y-4">
                     {selectedScheduleForModal.pets?.map((pet, idx) => (
-                      <div key={idx} className="bg-white border rounded-xl p-4 shadow-sm relative">
+                      <div
+                        key={idx}
+                        className="bg-white border rounded-xl p-4 shadow-sm relative"
+                      >
                         <div className="absolute top-4 right-4 bg-teal-50 text-teal-700 text-xs font-bold px-2 py-1 rounded-lg">
                           x{pet.amount || 1}
                         </div>
                         <h5 className="font-bold text-gray-900 text-base mb-1">
-                          {pet.name || "Unnamed"} <span className="text-gray-400 font-normal text-sm">({pet.breed || "Unknown Breed"})</span>
+                          {pet.name || "Unnamed"}{" "}
+                          <span className="text-gray-400 font-normal text-sm">
+                            ({pet.breed || "Unknown Breed"})
+                          </span>
                         </h5>
                         <div className="grid grid-cols-2 gap-y-2 mt-4 text-sm">
                           <div>
-                            <span className="text-gray-500">Size:</span> <span className="font-medium capitalize">{pet.size}</span>
+                            <span className="text-gray-500">Size:</span>{" "}
+                            <span className="font-medium capitalize">
+                              {pet.size}
+                            </span>
                           </div>
                           <div>
-                            <span className="text-gray-500">Special Care:</span> <span className="font-medium">{pet.specialService === "morningService" ? "Morning" : pet.specialService === "afternoonService" ? "Afternoon" : "Full Day"}</span>
+                            <span className="text-gray-500">Special Care:</span>{" "}
+                            <span className="font-medium">
+                              {pet.specialService === "morningService"
+                                ? "Morning"
+                                : pet.specialService === "afternoonService"
+                                  ? "Afternoon"
+                                  : "Full Day"}
+                            </span>
                           </div>
                           <div>
-                            <span className="text-gray-500">Check-In:</span> <span className="font-medium">{pet.checkIn}</span>
+                            <span className="text-gray-500">Check-In:</span>{" "}
+                            <span className="font-medium">{pet.checkIn}</span>
                           </div>
                           <div>
-                            <span className="text-gray-500">Check-Out:</span> <span className="font-medium">{pet.checkOut}</span>
+                            <span className="text-gray-500">Check-Out:</span>{" "}
+                            <span className="font-medium">{pet.checkOut}</span>
                           </div>
                         </div>
 
@@ -243,14 +260,22 @@ export default function SchedulesPage() {
                           <div className="mt-4 pt-4 border-t space-y-2 text-sm">
                             {pet.allergies && (
                               <div className="flex gap-2">
-                                <span className="text-red-500 font-bold shrink-0">Allergies:</span>
-                                <span className="text-gray-700">{pet.allergies}</span>
+                                <span className="text-red-500 font-bold shrink-0">
+                                  Allergies:
+                                </span>
+                                <span className="text-gray-700">
+                                  {pet.allergies}
+                                </span>
                               </div>
                             )}
                             {pet.instructions && (
                               <div className="flex gap-2">
-                                <span className="text-amber-600 font-bold shrink-0">Instructions:</span>
-                                <span className="text-gray-700">{pet.instructions}</span>
+                                <span className="text-amber-600 font-bold shrink-0">
+                                  Instructions:
+                                </span>
+                                <span className="text-gray-700">
+                                  {pet.instructions}
+                                </span>
                               </div>
                             )}
                           </div>
