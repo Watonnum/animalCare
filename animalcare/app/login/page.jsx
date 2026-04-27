@@ -13,7 +13,6 @@ const LoginForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // ดึงค่า callbackUrl ออกมาจาก query ถ้าไม่มีให้ใช้ "/" เป็นค่าเริ่มต้น
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const handleSubmit = async (e) => {

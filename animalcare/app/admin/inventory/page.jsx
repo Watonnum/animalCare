@@ -28,7 +28,7 @@ export default function InventoryPage() {
         const data = await res.json();
 
         // Artificial delay for smooth loading animation
-        await new Promise((resolve) => setTimeout(resolve, 400));
+        await new Promise((resolve) => setTimeout(resolve, 200));
         setProduct(data);
       } catch (error) {
         console.error(error);

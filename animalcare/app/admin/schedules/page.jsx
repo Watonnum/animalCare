@@ -18,7 +18,7 @@ export default function SchedulesPage() {
         if (!res.ok) throw new Error("Failed to fetch schedules");
         const data = await res.json();
 
-        await new Promise((resolve) => setTimeout(resolve, 400));
+        await new Promise((resolve) => setTimeout(resolve, 200));
         setSchedules(data);
       } catch (error) {
         console.error(error);

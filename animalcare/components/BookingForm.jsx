@@ -148,7 +148,9 @@ const BookingForm = () => {
 
   return (
     <>
-      {showSuccess && <Verified_booking router={router} bookingData={completedBooking} />}
+      {showSuccess && (
+        <Verified_booking router={router} bookingData={completedBooking} />
+      )}
 
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 w-full text-amber-950">
         <div className="flex-1 flex flex-col gap-6">
@@ -225,7 +227,7 @@ const BookingForm = () => {
                         </div>
                       </div>
                       <div
-                        className={`ml-auto w-10 h-6 rounded-full flex items-center p-1 ${pet.size === "small" ? "bg-stone-400" : "bg-stone-200"}`}
+                        className={`ml-auto w-10 h-6 rounded-full flex items-center p-1 ${pet.size === "small" ? "bg-green-600" : "bg-stone-200"}`}
                       >
                         <div
                           className={`w-4 h-4 rounded-full bg-white transition-transform ${pet.size === "small" ? "translate-x-4" : ""}`}
@@ -248,7 +250,7 @@ const BookingForm = () => {
                         </div>
                       </div>
                       <div
-                        className={`ml-auto w-10 h-6 rounded-full flex items-center p-1 ${pet.size === "large" ? "bg-stone-400" : "bg-stone-200"}`}
+                        className={`ml-auto w-10 h-6 rounded-full flex items-center p-1 ${pet.size === "large" ? "bg-green-600" : "bg-stone-200"}`}
                       >
                         <div
                           className={`w-4 h-4 rounded-full bg-white transition-transform ${pet.size === "large" ? "translate-x-4" : ""}`}
@@ -262,7 +264,7 @@ const BookingForm = () => {
                   <label className="text-sm font-semibold text-stone-600">
                     Amount
                   </label>
-                  <div className="flex items-center gap-4 h-[60px]">
+                  <div className="flex items-center gap-4 h-15">
                     <button
                       onClick={() =>
                         updatePet(pet.id, "amount", Math.max(1, pet.amount - 1))
@@ -335,7 +337,7 @@ const BookingForm = () => {
                       updatePet(pet.id, "allergies", e.target.value)
                     }
                     placeholder="None"
-                    className="w-full p-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8C4A0F] min-h-[80px] resize-none"
+                    className="w-full p-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8C4A0F] min-h-20 resize-none"
                   ></textarea>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -348,7 +350,7 @@ const BookingForm = () => {
                       updatePet(pet.id, "instructions", e.target.value)
                     }
                     placeholder="Needs daily brushing"
-                    className="w-full p-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8C4A0F] min-h-[80px] resize-none"
+                    className="w-full p-3 border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8C4A0F] min-h-20 resize-none"
                   ></textarea>
                 </div>
               </div>
@@ -375,7 +377,7 @@ const BookingForm = () => {
         </div>
 
         {/* Right Column: Summary */}
-        <div className="w-full lg:w-[400px]">
+        <div className="w-full lg:w-100">
           <BookingSummary
             pets={pets}
             subtotal={subtotal}
